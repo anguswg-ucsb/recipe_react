@@ -1,0 +1,58 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 50%;
+}
+
+.searchText {
+  border: 1px solid #f3f3f3;
+  height: 2rem;
+  box-sizing: border-box;
+  padding: 1px 10px;
+  outline: none;
+  transition: 0.2s ease-in-out;
+}
+
+.searchText:focus {
+  transition: 0.2s ease-in-out;
+  border: 1px solid blue;
+}
+
+.suggestions {
+  /* Styles of the suggestions container */
+  /* flex: 1; */
+  flex-direction: column;
+  overflow-y: scroll;
+  border: 1px solid #f3f3f3;
+  background-color: white;
+  max-height: 20rem;
+  width: 50%;
+  height: fit-content;
+  /* position: absolute; */
+  z-index: 10;
+}
+
+.suggestions.hidden {
+  /* Will hide the suggestions */
+  visibility: hidden;
+}
+
+.suggest {
+  /* Styling of a single suggestion */
+  cursor: pointer;
+  box-sizing: border-box;
+  padding: 1px 10px;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+}
+
+.suggest:hover {
+  /* Changing background color on hover */
+  background-color: #f3f3f3;
+}
+.searchItem {
+  flex-direction: row;
+  background-color: #f3f3f3;
+}
