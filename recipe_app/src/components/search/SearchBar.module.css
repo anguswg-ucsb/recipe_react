@@ -1,28 +1,151 @@
 .container {
+  position: relative;
+  width: 20em;
+  min-height: 1.5em;
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  /* height: 100%; */
-  /* width: 50%; */
+  background-color: lightblue;
+  align-items: center;
+  border: 0.05em solid #808080;
+  gap: 0.5em;
+  padding: 0.5em;
+  border-radius: 0.25em;
+  outline: none;
 }
 
-.leftContainer {
-  flex: 1; /* Take up one-third of the container width */
+.container:focus {
+  border-color: hsl(225, 50%, 50%);
+}
+
+.value {
+  flex-grow: 1;
+}
+
+.textbox {
+  flex-grow: 1;
+  border: 1px solid #f3f3f3;
+  border-radius: 0.25em;
+  height: 2rem;
+  box-sizing: border-box;
+  padding: 1px 10px;
+  outline: none;
+  transition: 0.2s ease-in-out;
+}
+
+.textbox:focus {
+  transition: 0.2s ease-in-out;
+  border: 1px solid black;
+}
+
+.clear-btn {
+  background: none;
+  color: #808080;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1.5em;
+}
+.clear-btn:focus,
+.clear-btn:hover {
+  color: #333;
+}
+
+.divider {
+  background-color: #808080;
+  align-self: stretch;
+  width: 0.05em;
+}
+
+.options {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* display: none; */
+  max-height: 15em;
+  overflow-y: auto;
+  border-radius: 0.25em;
+  border: 0.05em solid #808080;
+  width: 100%;
+  left: 0;
+  top: calc(100% + 0.25em);
+  background-color: white;
+  z-index: 100;
+}
+
+.options.hidden {
+  visibility: hidden;
+}
+
+.options.show {
+  display: block;
+}
+
+.option {
+  padding: 0.25em 0.5em;
+  cursor: pointer;
+}
+
+.option.highlighted {
+  background-color: hsl(175 50% 75%);
+}
+
+.option.selected {
+  background-color: hsl(175 50% 50%);
+}
+
+.option-badge {
   display: flex;
-  flex-direction: column; /* Stack items vertically */
-  background-color: #f0f0f0; /* Adjust styling as needed */
-  padding: 20px;
+  align-items: center;
+  border: 0.05em solid #808080;
+  border-radius: 0.25em;
+  padding: 0.15em 0.25em;
+  gap: 0.25em;
+  cursor: pointer;
+  background: none;
+  outline: none;
+}
+.option-badge:focus,
+.option-badge:hover {
+  background-color: lightcoral;
+  border-color: red;
 }
 
-.rightContainer {
-  flex: 2; /* Take up two-thirds of the container width */
-  background-color: #e0e0e0; /* Adjust styling as needed */
-  padding: 10px;
+.transformedDiv {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f3f3f3;
 }
 
+.transformedDiv span {
+  flex-grow: 1;
+  padding: 0.25rem;
+}
+
+.transformedDiv button {
+  background: none;
+  color: #808080;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1.5rem;
+}
+
+.transformedDiv button:focus,
+.transformedDiv button:hover {
+  color: #333;
+}
+
+/* .options .li {
+  font-size: ;
+} */
+/* 
 .searchText {
   border: 1px solid #f3f3f3;
-  /* width: 50%; */
   height: 2rem;
   box-sizing: border-box;
   padding: 1px 10px;
@@ -36,26 +159,20 @@
 }
 
 .suggestions {
-  /* Styles of the suggestions container */
-  /* flex: 1; */
   flex-direction: column;
   overflow-y: scroll;
   border: 1px solid #f3f3f3;
   background-color: white;
   max-height: 20rem;
-  /* width: 50%; */
   height: fit-content;
-  /* position: absolute; */
   z-index: 10;
 }
 
 .suggestions.hidden {
-  /* Will hide the suggestions */
   visibility: hidden;
 }
 
 .suggest {
-  /* Styling of a single suggestion */
   cursor: pointer;
   box-sizing: border-box;
   padding: 1px 10px;
@@ -65,7 +182,6 @@
 }
 
 .suggest:hover {
-  /* Changing background color on hover */
   background-color: #f3f3f3;
 }
 
@@ -74,11 +190,10 @@
 }
 
 .searchItem {
-  /* flex-direction: row; */
   background-color: #f3f3f3;
 }
 
-/* .suggestionGrid {
+.suggestionGrid {
   display: grid;
   grid-template-columns: repeat(
     auto-fill,
@@ -86,55 +201,53 @@
   ); 
   gap: 10px; 
   background-color: salmon;
-} */
+}
 
 .suggestionGrid {
-  display: flex; /* Use flexbox */
-  flex-direction: row; /* Allow items to wrap to the next row if needed */
-  gap: 10px; /* Add spacing between suggestions */
+  display: flex; 
+  flex-direction: row; 
+  gap: 10px; 
   background-color: salmon;
 }
 
-/* .resultList {
+.resultList {
   list-style-type: none; 
   padding: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-}  */
+} 
 
 .resultList {
-  list-style-type: none; /* Remove default bullet points */
-  padding: 0; /* Remove default padding */
+  list-style-type: none; 
+  padding: 0;
   display: flex;
-  flex-direction: column; /* Stack list items vertically */
+  flex-direction: column; 
   align-items: center;
-  flex-grow: 1; /* Expand to fill the available space vertically */
+  flex-grow: 1; 
 }
 
-/* .resultList li {
+.resultList li {
   width: 100%;
   margin-bottom: 10px;
   padding: 5px; 
   border: 1px solid #ccc;
   background-color: #f0f0f0; 
   flex-grow: 1; 
-} */
+}
 
 .resultList li {
-  flex: 1; /* Allow items to flex and fill the available space vertically */
+  flex: 1; 
   margin-bottom: 10px;
-  padding: 5px; /* Add padding to each list item */
-  border: 1px solid #ccc; /* Add a border around each item */
-  background-color: #f0f0f0; /* Background color */
-  display: flex; /* Use flexbox for text shrinking */
-  align-items: center; /* Center-align text vertically */
+  padding: 5px;
+  border: 1px solid #ccc; 
+  background-color: #f0f0f0; 
+  display: flex; 
+  align-items: center; 
 }
-
-/* Apply this style to description items */
 .resultList li.description {
-  flex: 1; /* Allow description items to shrink similarly to others */
-  white-space: nowrap; /* Prevent text from wrapping */
-  overflow: hidden; /* Hide overflow text */
-  text-overflow: ellipsis; /* Add ellipsis for overflow text */
-}
+  flex: 1; 
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}  */
