@@ -34,12 +34,10 @@
 }
 
 .suggestions.hidden {
-  /* Will hide the suggestions */
   visibility: hidden;
 }
 
 .suggest {
-  /* Styling of a single suggestion */
   cursor: pointer;
   box-sizing: border-box;
   padding: 1px 10px;
@@ -49,7 +47,6 @@
 }
 
 .suggest:hover {
-  /* Changing background color on hover */
   background-color: #f3f3f3;
 }
 .searchItem {
