@@ -1,8 +1,128 @@
+// import React, { useState, useEffect, useRef } from "react";
+// import axios from "axios";
+// import styles from "./SearchBar.module.css";
+
+// function SearchBar({
+//   addSelectedItems,
+//   onAddSearchBar,
+//   onRemoveSearchBar,
+//   element_index,
+// }) {
+//   const [query, setQuery] = useState("");
+//   const [items, setItems] = useState([]);
+
+//   const [transformed, setTransformed] = useState(false); // New state for transformation
+
+//   function removeOptions() {
+//     setQuery("");
+//     setItems([]);
+//   }
+
+//   function onTrigger(event) {
+//     // event.preventDefault();
+//     addSelectedItems(event);
+//     // event.preventDefault();
+//   }
+
+//   function handleKeyDown(event) {
+//     if (event.key === "Enter") {
+//       console.log("ENTER PRESSED");
+//       console.log("----> event: ", event);
+//       console.log("----> query: ", query);
+//       console.log("----> items: ", items);
+
+//       console.log("--> UPDATING selectedItems: ", items);
+//       // setHighlightedIndex((prevIndex) => prevIndex - 1);
+//       const updatedItems = [...items, query];
+//       console.log("----> updatedItems: ", updatedItems);
+//       // selectOption(suggestions[highlightedIndex].title);
+
+//       // add the newly selected item to the selected items list
+//       setItems(updatedItems);
+//       addSelectedItems(query);
+//       // addSelectedItems()
+//       // Transform input into a div
+//       setTransformed(true);
+
+//       if (query) {
+//         // Pass the selected item to the parent
+//         onAddSearchBar(query);
+//       }
+
+//       // Handle Enter key press
+//       // setInputText(option);
+//       // setInputText(suggestions[highlightedIndex - 1]);
+//     } else if (event.key === "Backspace") {
+//       if (!query && transformed) {
+//         onRemoveSearchBar(); // Call the function to remove the SearchBar
+
+//         if (items.length === 1) {
+//           // If there's only one input left, transform it back to an input element
+//           setTransformed(false);
+//         }
+//       }
+//     }
+//   }
+
+//   // function handleItemClick(title) {
+//   //   console.log("--> UPDATING selectedItems: ", selectedItems);
+//   //   const updatedItems = [
+//   //     ...selectedItems,
+//   //     suggestions.find((s) => s["title"] === title),
+//   //   ];
+//   //   setSelectedItems(updatedItems);
+//   //   if (suggestions.find((s) => s.title === title)) {
+//   //     // Pass the selected item to the parent
+//   //     onAddSearchBar(suggestions.find((s) => s.title === title).title);
+//   //   }
+//   // }
+
+//   return (
+//     <>
+//       {transformed ? ( // Conditional rendering: Input or transformed div
+//         <div className={styles.transformedDiv}>
+//           <span>{query}</span>
+//           <button onClick={(e) => onRemoveSearchBar(element_index)}>
+//             &times;
+//           </button>
+//         </div>
+//       ) : (
+//         <input
+//           type="text"
+//           autoFocus
+//           className={styles.textbox}
+//           value={query}
+//           onKeyDown={handleKeyDown}
+//           onChange={(e) => setQuery(e.target.value)}
+//           placeholder="Search..."
+//         />
+//       )}
+//       {transformed ? ( // Conditional rendering: No clear button for div
+//         <div className={styles.emptyDiv}></div>
+//       ) : (
+//         <button
+//           className={styles["clear-btn"]}
+//           onClick={(e) => {
+//             e.stopPropagation();
+//             onRemoveSearchBar();
+//           }}
+//         >
+//           &times;
+//         </button>
+//       )}
+//     </>
+//   );
+// }
+
+// export default SearchBar;
+// // // // // // // // //  MOST RECENT // // // // // // // // // //
+// // // // // // // // //  MOST RECENT // // // // // // // // // //
+
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import styles from "./SearchBar.module.css";
 
-function SearchBar({ parentCallback, onAddSearchBar, onRemoveSearchBar }) {
+function SearchBar({ addSelectedItems, onAddSearchBar, onRemoveSearchBar }) {
   const [inputText, setInputText] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [hideSuggestions, setHideSuggestions] = useState(true);
@@ -10,6 +130,8 @@ function SearchBar({ parentCallback, onAddSearchBar, onRemoveSearchBar }) {
   const [selectedItems, setSelectedItems] = useState([]);
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [transformed, setTransformed] = useState(false); // New state for transformation
+  // const [inputValues, setInputValues] = useState([""]);
+  // const [focusedInputIndex, setFocusedInputIndex] = useState(0);
 
   // const containerRef = useRef(null);
   // useEffect(() => {
@@ -134,6 +256,18 @@ function SearchBar({ parentCallback, onAddSearchBar, onRemoveSearchBar }) {
       // Transform input into a div
       setTransformed(true);
 
+      // if (inputText) {
+      //   const updatedInputValues = [...inputValues, inputText];
+      //   setInputValues(updatedInputValues);
+      //   setInputText("");
+      //   setFocusedInputIndex(inputValues.length);
+      //   // ... (rest of your code)
+
+      //   if (suggestions[highlightedIndex]) {
+      //     // Pass the selected item to the parent
+      //     onAddSearchBar(suggestions[highlightedIndex].title);
+      //   }
+      // }
       if (suggestions[highlightedIndex]) {
         // Pass the selected item to the parent
         onAddSearchBar(suggestions[highlightedIndex].title);
@@ -145,6 +279,11 @@ function SearchBar({ parentCallback, onAddSearchBar, onRemoveSearchBar }) {
     } else if (event.key === "Backspace") {
       if (!inputText && transformed) {
         onRemoveSearchBar(); // Call the function to remove the SearchBar
+
+        if (selectedItems.length === 1) {
+          // If there's only one input left, transform it back to an input element
+          setTransformed(false);
+        }
       }
     }
   }
@@ -181,12 +320,12 @@ function SearchBar({ parentCallback, onAddSearchBar, onRemoveSearchBar }) {
 
   function onTrigger(event) {
     // event.preventDefault();
-    parentCallback(event);
+    addSelectedItems(event);
     // event.preventDefault();
   }
 
   return (
-    <div tabIndex={0} className={styles.container}>
+    <>
       {transformed ? ( // Conditional rendering: Input or transformed div
         <div className={styles.transformedDiv}>
           <span>{inputText}</span>
@@ -195,6 +334,7 @@ function SearchBar({ parentCallback, onAddSearchBar, onRemoveSearchBar }) {
       ) : (
         <input
           type="text"
+          autoFocus
           className={styles.textbox}
           value={inputText}
           onClick={() => setIsOpen((prev) => !prev)}
@@ -209,7 +349,6 @@ function SearchBar({ parentCallback, onAddSearchBar, onRemoveSearchBar }) {
           placeholder="Search..."
         />
       )}
-      <div className={styles.divider}></div>
       {transformed ? ( // Conditional rendering: No clear button for div
         <div className={styles.emptyDiv}></div>
       ) : (
@@ -250,11 +389,14 @@ function SearchBar({ parentCallback, onAddSearchBar, onRemoveSearchBar }) {
           </li>
         ))}
       </ul>
-    </div>
+    </>
   );
 }
 
 export default SearchBar;
+
+// // // // // // // // //  MOST RECENT // // // // // // // // // //
+// // // // // // // // //  MOST RECENT // // // // // // // // // //
 
 // import React, { useState, useEffect } from "react";
 // import axios from "axios";
@@ -458,385 +600,3 @@ export default SearchBar;
 // }
 
 // export default SearchBar;
-
-// import React, { Component } from "react";
-// import { useEffect, useState } from "react";
-// import axios from "axios";
-// import styles from "./SearchBar.module.css";
-// // import SearchResult from "./SearchResult.jsx";
-
-// function SearchBar() {
-//   // const options = [
-//   //   { label: "First", value: 1 },
-//   //   { label: "Second", value: 2 },
-//   //   // { label: "Third", value: 3 },
-//   //   // { label: "Fourth", value: 4 },
-//   //   // { label: "Fifth", value: 5 },
-//   // ];
-//   const [textInput, setTextInput] = useState("");
-
-//   const [suggestions, setSuggestions] = useState([]);
-//   const [hideSuggestions, setHideSuggestions] = useState(true);
-
-//   const [isOpen, setIsOpen] = useState(false);
-//   const [items, setItems] = useState([]);
-//   const [highlighted, setHighlighted] = useState(0);
-
-//   // when the text input changes (textInput dependency array changes), fetch new data from search endpoint
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const { data } = await axios.get(
-//           `https://dummyjson.com/products/search?q=${textInput}&limit=3`
-//         );
-
-//         console.log("=========================");
-//         console.log("suggestions: ", suggestions);
-//         console.log("data['products']: ", data["products"]);
-//         console.log("=========================");
-
-//         setSuggestions(data["products"]);
-//       } catch (err) {
-//         console.log("err: ", err);
-//       }
-//     };
-//     fetchData();
-//   }, [textInput]);
-
-//   // if the box is opened then closed and reopened,
-//   // the highlighted index is reset back to the first element
-//   useEffect(() => {
-//     if (isOpen) {
-//       setHighlighted(0);
-//     }
-//   }, [isOpen]);
-
-//   function handleChange(event) {
-//     setTextInput(event.target.value);
-//     console.log("textInput: ", textInput);
-//     // let suggests = trie.getSuggestions(textInput);
-//     // console.log("suggests: ", suggests);
-//   }
-
-//   function removeOptions() {
-//     setTextInput(""); // Clear the input value
-//     setItems([]);
-//   }
-
-//   function selectOption(option) {
-//     console.log("option: ", option);
-//     setTextInput(option);
-//     // setSuggestions([]);
-//   }
-
-//   function handleKeyDown(event) {
-//     if (event.key === "ArrowDown") {
-//       event.preventDefault();
-//       // Handle down arrow key press
-//     } else if (event.key === "ArrowUp") {
-//       event.preventDefault();
-//       // Handle up arrow key press
-//     } else if (event.key === "Enter") {
-//     }
-//   }
-
-//   function handleItemClick(title) {
-//     console.log("title: ", title);
-//     console.log("items: ", items);
-//     // console.log("event['products']['title']: ", event["products"]["title"]);
-//     // console.log("item: ", item);
-//     // setItem(suggestions.find((s) => s["title"] === title));
-
-//     const updated_items = [
-//       ...items,
-//       suggestions.find((s) => s["title"] === title),
-//     ];
-
-//     setItems(updated_items);
-//   }
-//   function isOptionSelected(option) {
-//     console.log("option: ", option, "vs. textInput: ", textInput);
-//     console.log("option.title: ", option, "vs. textInput: ", textInput);
-//     return option.title === textInput;
-//   }
-
-//   return (
-//     <div tabIndex={0} className={styles.container}>
-//       <input
-//         type="text"
-//         className={styles.textbox}
-//         value={textInput}
-//         onClick={() => setIsOpen((prev) => !prev)}
-//         // onChange={handleChange}
-//         onChange={(e) => {
-//           setTextInput(e.target.value);
-//         }}
-//         // onFocus={handleFocus}
-//         onFocus={() => setHideSuggestions(false)}
-//         onBlur={async () => {
-//           setTimeout(() => {
-//             setHideSuggestions(true);
-//           }, 200);
-//         }}
-//         // onBlur={() => setIsOpen(false)}
-//         placeholder="Search..."
-//       />
-//       <div className={styles.divider}></div>
-//       <button
-//         className={styles["clear-btn"]}
-//         onClick={(e) => {
-//           e.stopPropagation();
-//           removeOptions();
-//         }}
-//       >
-//         &times;
-//       </button>
-//       <ul
-//         className={`${styles["options"]} ${
-//           hideSuggestions && styles["hidden"]
-//         }`}
-//       >
-//         {/* <ul className={`${styles.options} ${isOpen ? styles.show : ""}`}> */}
-//         {suggestions.map((suggest, index) => (
-//           <li
-//             key={suggest.label}
-//             className={`${styles.option} ${
-//               isOptionSelected(suggest) ? styles.selected : ""
-//             }
-//             ${index === highlighted ? styles.highlighted : ""}`}
-//             onClick={(e) => {
-//               console.log("Clicked on: ", suggest.title);
-//               e.stopPropagation();
-//               selectOption(suggest.title);
-//               handleItemClick(suggest.title);
-//               setIsOpen(false);
-//             }}
-//             onMouseEnter={() => setHighlighted(index)}
-//           >
-//             {suggest.title}
-//           </li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// }
-
-// export default SearchBar;
-
-// function SearchBar() {
-//   const [textInput, setTextInput] = useState("");
-//   const [suggestions, setSuggestions] = useState([]);
-//   const [hideSuggestions, setHideSuggestions] = useState(true);
-//   const [item, setItem] = useState(null);
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const { data } = await axios.get(
-//           `https://dummyjson.com/products/search?q=${textInput}&limit=3`
-//         );
-//         console.log("styles['hidden']: ", styles["hidden"]);
-//         console.log("styles['suggestions']: ", styles["suggestions"]);
-//         console.log("=========================");
-//         console.log("suggestions: ", suggestions);
-//         console.log("=========================");
-
-//         setSuggestions(data["products"]);
-
-//         console.log("=========================");
-//         console.log("data: ", data);
-//         console.log("=========================");
-//         console.log("data['products']: ", data["products"]);
-//         console.log("=========================");
-//       } catch (err) {
-//         console.log("err: ", err);
-//       }
-//     };
-//     fetchData();
-//   }, [textInput]);
-
-// function handleChange(event) {
-//   setTextInput(event.target.value);
-//   console.log("textInput: ", textInput);
-//   // let suggests = trie.getSuggestions(textInput);
-//   // console.log("suggests: ", suggests);
-// }
-
-//   function handleFocus() {
-//     console.log("HANDLING FOCUS");
-//     setHideSuggestions(false);
-//   }
-
-//   // async function handleBlur() {
-//   //   console.log("HANDLING BLUR");
-//   //   setTimeout(() => {
-//   //     setHideSuggestions(true);
-//   //   }, 200);
-//   // }
-
-// function handleClick(title) {
-//   console.log("title: ", title);
-//   // console.log("event['products']['title']: ", event["products"]["title"]);
-//   console.log("item: ", item);
-//   setItem(suggestions.find((s) => s["title"] === title));
-// }
-
-//   return (
-//     <>
-//       <div className={styles.container}>
-//         <input
-//           type="text"
-//           className={styles.searchText}
-//           value={textInput}
-//           // onClick={handleClick}
-//           onChange={handleChange}
-//           onFocus={handleFocus}
-//           // onBlur={handleBlur}
-//           placeholder="Search..."
-//         />
-//         <div
-//           className={`${styles["suggestions"]} ${
-//             hideSuggestions && styles.hidden
-//           }`}
-//         >
-//           {suggestions.map((suggest) => (
-//             <div
-//               className={styles["suggest"]}
-//               onClick={() => handleClick(suggest.title)}
-//             >
-//               {suggest["title"]}
-//             </div>
-//           ))}
-//         </div>
-//         <div className={styles.searchItem}>
-//           {item && <SearchResult {...item} />}
-//         </div>
-//       </div>
-//     </>
-//   );
-// }
-
-// // // export default SearchBar;
-// // function SearchBar() {
-// //   const [textInput, setTextInput] = useState("");
-// //   // const [suggestions, setSuggestions] = useState([]);
-// //   // const [trie, setTrie] = useState(new Trie());
-
-// //   // Create an instance of the Trie class
-// //   // const trie = new Trie(foodWords);
-
-// // function handleChange(event) {
-// //   setTextInput(event.target.value);
-// //   console.log("textInput: ", textInput);
-// //   // let suggests = trie.getSuggestions(textInput);
-// //   // console.log("suggests: ", suggests);
-// // }
-
-// //   function handleButtonClick() {
-// //     console.log("SEARCH BUTTON CLICKED: ", textInput);
-// //   }
-
-// //   // Event handler for keydown
-// //   function handleKeyDown(event) {
-// //     if (event.key === "Enter") {
-// //       // Handle the Enter key press
-// //       console.log("ENTER KEY PRESSED");
-// //       console.log("ENTER CLICK TEXT OUT: ", textInput);
-// //     }
-// //   }
-
-// //   return (
-// //     <div className="search-bar">
-// // <input
-// //   type="text"
-// //   onChange={handleChange}
-// //   onKeyDown={handleKeyDown}
-// //   placeholder="Search..."
-// // />
-// //       <button
-// //         type="button"
-// //         className="btn btn-primary"
-// //         onClick={handleButtonClick}
-// //       >
-// //         Search
-// //       </button>
-// //     </div>
-// //   );
-// // }
-
-// export default SearchBar;
-
-// class SearchBar extends Component {
-//     constructor() {
-//         super();
-//         this.state = {
-//           textInput: "",
-//         };
-//       }
-//       incrementWords = () => {
-//         this.setState({ count: this.state.count + 1 });
-//       }
-
-//   render() {
-//     return (
-//       <div className="search-bar">
-//         <input type="text" placeholder="Search..." />
-//         <button type="button" className="btn btn-primary">
-//           Search
-//         </button>
-//       </div>
-//     );
-//   }
-// }
-// const foodWords = [
-//   "apple",
-//   "banana",
-//   "cherry",
-//   "grape",
-//   "strawberry",
-//   "blueberry",
-//   "orange",
-//   "mango",
-//   "watermelon",
-//   "pineapple",
-//   "kiwi",
-//   "avocado",
-//   "peach",
-//   "pear",
-//   "plum",
-//   "lemon",
-//   "lime",
-//   "grapefruit",
-//   "pomegranate",
-//   "coconut",
-//   "apricot",
-//   "fig",
-//   "nectarine",
-//   "cantaloupe",
-//   "honeydew",
-//   "broccoli",
-//   "carrot",
-//   "potato",
-//   "cucumber",
-//   "eggplant",
-//   "lettuce",
-//   "pepper",
-//   "tomato",
-//   "zucchini",
-//   "pumpkin",
-//   "onion",
-//   "garlic",
-//   "celery",
-//   "cabbage",
-//   "cauliflower",
-//   "spinach",
-//   "strawberry",
-//   "blueberry",
-//   "raspberry",
-//   "blackberry",
-//   "cranberry",
-//   "papaya",
-//   "passionfruit",
-//   "guava",
-//   "starfruit",
-// ];

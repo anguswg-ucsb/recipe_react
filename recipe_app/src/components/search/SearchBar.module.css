@@ -61,7 +61,7 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  /* display: none; */
+  display: none;
   max-height: 15em;
   overflow-y: auto;
   border-radius: 0.25em;
@@ -94,23 +94,6 @@
   background-color: hsl(175 50% 50%);
 }
 
-.option-badge {
-  display: flex;
-  align-items: center;
-  border: 0.05em solid #808080;
-  border-radius: 0.25em;
-  padding: 0.15em 0.25em;
-  gap: 0.25em;
-  cursor: pointer;
-  background: none;
-  outline: none;
-}
-.option-badge:focus,
-.option-badge:hover {
-  background-color: lightcoral;
-  border-color: red;
-}
-
 .transformedDiv {
   display: flex;
   align-items: center;
@@ -138,6 +121,23 @@
 .transformedDiv button:focus,
 .transformedDiv button:hover {
   color: #333;
+}
+
+.option-badge {
+  display: flex;
+  align-items: center;
+  border: 0.05em solid #808080;
+  border-radius: 0.25em;
+  padding: 0.15em 0.25em;
+  gap: 0.25em;
+  cursor: pointer;
+  background: none;
+  outline: none;
+}
+.option-badge:focus,
+.option-badge:hover {
+  background-color: lightcoral;
+  border-color: red;
 }
 
 /* .options .li {
