@@ -1,8 +1,12 @@
 .container {
-  position: relative;
+  position: fixed;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-wrap: wrap;
   width: 20em;
   min-height: 1.5em;
-  display: flex;
   background-color: lightblue;
   align-items: center;
   border: 0.05em solid #808080;
@@ -56,6 +60,35 @@
   width: 0.05em;
 }
 
+.ingredient-badge {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f3f3f3;
+}
+
+.ingredient-badge span {
+  flex-grow: 1;
+  padding: 0.25rem;
+}
+
+.ingredient-badge button {
+  background: none;
+  color: #808080;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1.5rem;
+}
+
+.ingredient-badge button:focus,
+.ingredient-badge button:hover {
+  color: #333;
+}
+
 .options {
   position: absolute;
   margin: 0;
@@ -93,36 +126,10 @@
 .option.selected {
   background-color: hsl(175 50% 50%);
 }
-
-.transformedDiv {
-  display: flex;
-  align-items: center;
-  padding: 0.25rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #f3f3f3;
+.option.highlight-selected {
+  background-color: hsl(175 50% 75%);
+  /* background-color: hsl(176, 32%, 75%); */
 }
-
-.transformedDiv span {
-  flex-grow: 1;
-  padding: 0.25rem;
-}
-
-.transformedDiv button {
-  background: none;
-  color: #808080;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 0;
-  font-size: 1.5rem;
-}
-
-.transformedDiv button:focus,
-.transformedDiv button:hover {
-  color: #333;
-}
-
 .option-badge {
   display: flex;
   align-items: center;
@@ -139,6 +146,38 @@
   background-color: lightcoral;
   border-color: red;
 }
+
+/* Container for the results */
+.results-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 3 columns */
+  grid-template-rows: repeat(2, 1fr); /* 3 rows */
+  grid-gap: 10px; /* Adjust the gap between items as needed */
+  max-height: 300px; /* Set a max height for the results */
+  overflow-y: auto; /* Enable vertical scrolling when content exceeds max height */
+  padding: 10px;
+}
+
+/* Style for individual result items */
+.recipe-card {
+  background: #f4f4f4;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* .recipe-card {
+  position: relative;
+  width: 20em;
+  min-height: 1.5em;
+  display: flex;
+  background-color: lightblue;
+  align-items: center;
+  border: 0.05em solid #808080;
+  gap: 0.5em;
+  padding: 0.5em;
+  border-radius: 0.25em;
+} */
 
 /* .options .li {
   font-size: ;
