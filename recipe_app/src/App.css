@@ -77,3 +77,45 @@ nav {
   text-decoration: none;
   margin-left: 1rem; /* Add space between links */
 }
+
+/* .search-bar-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  padding: 0.5em;
+  background-color: #585d67;
+} */
+.search-bar-container {
+  position: relative;
+  width: 20em;
+  min-height: 1.5em;
+  display: flex;
+  background-color: lightblue;
+  align-items: center;
+  border: 0.05em solid #808080;
+  gap: 0.5em;
+  padding: 0.5em;
+  border-radius: 0.25em;
+  outline: none;
+}
+
+.search-bar-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  padding: 0.5em;
+}
+
+.add-btn {
+  background: none;
+  color: #808080;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1.5em;
+}
+.add-btn:focus,
+.add-btn:hover {
+  color: #333;
+}

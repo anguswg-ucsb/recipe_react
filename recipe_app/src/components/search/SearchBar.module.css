@@ -1,10 +1,188 @@
 .container {
+  position: fixed;
+  top: 25%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 50%;
+  flex-wrap: wrap;
+  width: 20em;
+  min-height: 1.5em;
+  background-color: lightblue;
+  align-items: center;
+  border: 0.05em solid #808080;
+  gap: 0.5em;
+  padding: 0.5em;
+  border-radius: 0.25em;
+  outline: none;
 }
 
+.container:focus {
+  border-color: hsl(225, 50%, 50%);
+}
+
+.value {
+  flex-grow: 1;
+}
+
+.textbox {
+  flex-grow: 1;
+  border: 1px solid #f3f3f3;
+  border-radius: 0.25em;
+  height: 2rem;
+  box-sizing: border-box;
+  padding: 1px 10px;
+  outline: none;
+  transition: 0.2s ease-in-out;
+}
+
+.textbox:focus {
+  transition: 0.2s ease-in-out;
+  border: 1px solid black;
+}
+
+.clear-btn {
+  background: none;
+  color: #808080;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1.5em;
+}
+.clear-btn:focus,
+.clear-btn:hover {
+  color: #333;
+}
+
+.divider {
+  background-color: #808080;
+  align-self: stretch;
+  width: 0.05em;
+}
+
+.ingredient-badge {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f3f3f3;
+}
+
+.ingredient-badge span {
+  flex-grow: 1;
+  padding: 0.25rem;
+}
+
+.ingredient-badge button {
+  background: none;
+  color: #808080;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: 1.5rem;
+}
+
+.ingredient-badge button:focus,
+.ingredient-badge button:hover {
+  color: #333;
+}
+
+.options {
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: none;
+  max-height: 15em;
+  overflow-y: auto;
+  border-radius: 0.25em;
+  border: 0.05em solid #808080;
+  width: 100%;
+  left: 0;
+  top: calc(100% + 0.25em);
+  background-color: white;
+  z-index: 100;
+}
+
+.options.hidden {
+  visibility: hidden;
+}
+
+.options.show {
+  display: block;
+}
+
+.option {
+  padding: 0.25em 0.5em;
+  cursor: pointer;
+}
+
+.option.highlighted {
+  background-color: hsl(175 50% 75%);
+}
+
+.option.selected {
+  background-color: hsl(175 50% 50%);
+}
+.option.highlight-selected {
+  background-color: hsl(175 50% 75%);
+  /* background-color: hsl(176, 32%, 75%); */
+}
+.option-badge {
+  display: flex;
+  align-items: center;
+  border: 0.05em solid #808080;
+  border-radius: 0.25em;
+  padding: 0.15em 0.25em;
+  gap: 0.25em;
+  cursor: pointer;
+  background: none;
+  outline: none;
+}
+.option-badge:focus,
+.option-badge:hover {
+  background-color: lightcoral;
+  border-color: red;
+}
+
+/* Container for the results */
+.results-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 3 columns */
+  grid-template-rows: repeat(2, 1fr); /* 3 rows */
+  grid-gap: 10px; /* Adjust the gap between items as needed */
+  max-height: 300px; /* Set a max height for the results */
+  overflow-y: auto; /* Enable vertical scrolling when content exceeds max height */
+  padding: 10px;
+}
+
+/* Style for individual result items */
+.recipe-card {
+  background: #f4f4f4;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* .recipe-card {
+  position: relative;
+  width: 20em;
+  min-height: 1.5em;
+  display: flex;
+  background-color: lightblue;
+  align-items: center;
+  border: 0.05em solid #808080;
+  gap: 0.5em;
+  padding: 0.5em;
+  border-radius: 0.25em;
+} */
+
+/* .options .li {
+  font-size: ;
+} */
+/* 
 .searchText {
   border: 1px solid #f3f3f3;
   height: 2rem;
@@ -20,16 +198,12 @@
 }
 
 .suggestions {
-  /* Styles of the suggestions container */
-  /* flex: 1; */
   flex-direction: column;
   overflow-y: scroll;
   border: 1px solid #f3f3f3;
   background-color: white;
   max-height: 20rem;
-  width: 50%;
   height: fit-content;
-  /* position: absolute; */
   z-index: 10;
 }
 
@@ -49,7 +223,70 @@
 .suggest:hover {
   background-color: #f3f3f3;
 }
+
+.resultsContainer {
+  display: flex;
+}
+
 .searchItem {
-  flex-direction: row;
   background-color: #f3f3f3;
 }
+
+.suggestionGrid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(200px, 1fr)
+  ); 
+  gap: 10px; 
+  background-color: salmon;
+}
+
+.suggestionGrid {
+  display: flex; 
+  flex-direction: row; 
+  gap: 10px; 
+  background-color: salmon;
+}
+
+.resultList {
+  list-style-type: none; 
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+} 
+
+.resultList {
+  list-style-type: none; 
+  padding: 0;
+  display: flex;
+  flex-direction: column; 
+  align-items: center;
+  flex-grow: 1; 
+}
+
+.resultList li {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 5px; 
+  border: 1px solid #ccc;
+  background-color: #f0f0f0; 
+  flex-grow: 1; 
+}
+
+.resultList li {
+  flex: 1; 
+  margin-bottom: 10px;
+  padding: 5px;
+  border: 1px solid #ccc; 
+  background-color: #f0f0f0; 
+  display: flex; 
+  align-items: center; 
+}
+.resultList li.description {
+  flex: 1; 
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
+}  */
