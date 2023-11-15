@@ -1,27 +1,44 @@
-// React component for the search bar with chips
+// ####################### GOOD TO GO (Single state object) #######################
+// ####################### GOOD TO GO (Single state object) #######################
+
 import React, { useState, useEffect, useRef } from "react";
 import { useDebounce } from "../../hooks/useDebounce";
 import axios from "axios";
 import styles from "./SearchBar.module.css";
-import RecipeCard from "./RecipeCard.jsx";
 import IngredientBadge from "./IngredientBadge";
-// import "dotenv/config";
+import RecipeCard from "./RecipeCard";
+// import Grid from "react-bootstrap/Grid";
+// import Col from "react-bootstrap/Col";
+// import Row from "react-bootstrap/Row";
+import RecipeCardGrid from "./RecipeCardGrid";
+// import Card from "react-bootstrap/Card";
+// import "./Card.css";
+
+let recipe_data = [
+  {
+    dish: "Chicken Parmesan",
+    ingredients: ["chicken", "tomato sauce", "mozzarella cheese"],
+  },
+  {
+    dish: "Chicken Marsala",
+    ingredients: ["chicken", "marsala wine", "mushrooms"],
+  },
+  {
+    dish: "Burrata Chicken Pizza",
+    ingredients: ["pizza dough", "chicken", "tomato sauce", "burrata cheese"],
+  },
+];
 
 function SearchBarWithChips() {
-  const [query, setQuery] = useState("");
+  const [state, setState] = useState({
+    query: "",
+    isHidden: true,
+    ingredients: [],
+    selectedItems: [],
+    highlightedIndex: -1,
+    result: [],
+  });
 
-  const [isHidden, setIsHidden] = useState(true);
-
-  const [ingredients, setIngredients] = useState([]);
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [selectedIds, setSelectedIds] = useState([]);
-
-  const [highlightedIndex, setHighlightedIndex] = useState(-1);
-
-  // save data from selected search items
-  const [result, setResult] = useState([]);
-
-  // ref for the input element
   const inputRef = useRef();
 
   // delay search query until 1 second after user stops typing
@@ -29,7 +46,7 @@ function SearchBarWithChips() {
     () => {
       const fetchData = async () => {
         try {
-          console.log("EXECUTING QUERY: ", query);
+          console.log("EXECUTING QUERY: ", state.query);
           console.log("process.env: ", process.env); // remove thi
           console.log(
             "process.env.REACT_APP_API_URL: ",
@@ -37,83 +54,101 @@ function SearchBarWithChips() {
           );
           console.log(
             "query url: ",
-            `${process.env.REACT_APP_API_URL}/dev/api/v1/suggested-ingredients/?search=${query}&limit=5`
+            `${process.env.REACT_APP_API_URL}/dev/api/v1/suggested-ingredients/?search=${state.query}&limit=5`
           );
 
           const { data } = await axios.get(
-            `${process.env.REACT_APP_API_URL}/dev/api/v1/suggested-ingredients/?search=${query}&limit=5`
+            `${process.env.REACT_APP_API_URL}/dev/api/v1/suggested-ingredients/?search=${state.query}&limit=5`
           );
 
           console.log("data: ", data);
           console.log("data['suggestions']: ", data["suggestions"]);
+          console.log("----> selected: ", state.ingredients);
 
           // set the ingredients to the products array
-          setIngredients(data["suggestions"] || []);
+          setState((prevState) => ({
+            ...prevState,
+            ingredients: data["suggestions"] || [],
+          }));
 
+          //   // set the ingredients to the products array
+          //   setState({ ...state, ingredients: data["suggestions"] || [] });
           console.log("Setting hidden to FALSE");
 
-          setIsHidden(false);
+          setState((prevState) => ({ ...prevState, isHidden: false }));
         } catch (error) {
           console.log(error);
         }
       };
-      if (query) {
+      if (state.query) {
         fetchData();
       }
-      //   fetchData();
     },
-    200,
-    [query]
+    1000,
+    [state.query]
   );
 
-  //   useEffect(() => {
-  //     const pid = selectedItems.map(
-  //       (item) => `https://dummyjson.com/products/category/${item.category}`
-  //     );
-  //     console.log("=========================");
-  //     console.log("==== SECOND API CALL ====");
-  //     console.log("selectedItems: ", selectedItems);
-  //     console.log("pid: ", pid);
-
-  //     const fetchResultsData = async (url) => {
-  //       try {
-  //         console.log("---> QUERYING url:\n", url);
-
-  //         const { data } = await axios.get(url);
-
-  //         console.log("result: ", result);
-  //         console.log("data: ", data);
-
-  //         console.log("data['products']: ", data["products"]);
-  //         // const updatedItems = [...selectedItems, data];
-  //         // console.log("SECOND API CALL updatedItems: ", updatedItems);
-
-  //         // Update the results state with the fetched data
-  //         setResult((prevResults) => [...prevResults, ...data["products"]]);
-  //         // setResult((prevResults) => [...prevResults, data]);
-  //         console.log("=========================");
-  //         // set the results array to response data
-
-  //         //   setIngredients(data["products"]);
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     };
-  //     if (pid.length === 0) {
-  //       setResult([]);
-  //     }
-  //     if (pid.length > 0) {
-  //       // Clear the previous results before making new API calls
-  //       setResult([]);
-  //       pid.forEach((url) => fetchResultsData(url));
-  //     }
-  //   }, [selectedItems]);
-
   useEffect(() => {
-    if (isHidden) {
-      setHighlightedIndex(-1);
+    // base search URL by ingredients
+    const base_url = `${process.env.REACT_APP_API_URL}/dev/api/v1/dishes-by-ingredients/?ingredients=`;
+
+    // join all the selected ingredients with "&" delimiter and replace spaces with +
+    const search_items = state.selectedItems
+      .map((str) => str.replace(/\s+/g, "+"))
+      .join("&ingredients=");
+
+    // url to query the API for recipes based on the selected ingredients
+    const search_url = `${base_url}${search_items}&limit=3`;
+
+    console.log("=========================");
+    console.log("==== SECOND API CALL ====");
+    console.log("selectedItems: ", state.selectedItems);
+    console.log("search_items: ", search_items);
+    console.log("search_url: ", search_url);
+    console.log("=========================");
+
+    const fetchResultsData = async (url) => {
+      try {
+        console.log("---> QUERYING search_url:\n", search_url);
+
+        const { data } = await axios.get(search_url);
+
+        console.log("result: ", state.result);
+        console.log("data: ", data);
+
+        // // Update the results state with the fetched data
+        // setState((prevState) => ({
+        //   ...prevState,
+        //   result: [...prevState.result, data],
+        // }));
+
+        setState((prevState) => ({
+          ...prevState,
+          result: data || [],
+        }));
+        console.log("=========================");
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (state.selectedItems.length === 0) {
+      setState((prevState) => ({ ...prevState, result: [] }));
     }
-  }, [isHidden]);
+    if (state.selectedItems.length > 0) {
+      console.log("===== CLEARING RESULTS =====");
+      // Clear the previous results before making new API calls
+      setState((prevState) => ({ ...prevState, result: [] }));
+      fetchResultsData(search_url);
+      console.log("=========================");
+    }
+  }, [state.selectedItems]);
+
+  // set the highlightedIndex state value to -1 when isHidden changes
+  useEffect(() => {
+    if (state.isHidden) {
+      setState((prevState) => ({ ...prevState, highlightedIndex: -1 }));
+    }
+  }, [state.isHidden]);
 
   function handleKeyDown(event) {
     if (event.key === "ArrowDown") {
@@ -121,9 +156,11 @@ function SearchBarWithChips() {
 
       console.log("DOWN ARROW PRESSED");
       console.log("----> event: ", event);
-      if (highlightedIndex < ingredients.length - 1) {
-        setHighlightedIndex((prevIndex) => prevIndex + 1);
-        // setSelectedItem(ingredients[highlightedIndex + 1]);
+      if (state.highlightedIndex < state.ingredients.length - 1) {
+        setState((prevState) => ({
+          ...prevState,
+          highlightedIndex: prevState.highlightedIndex + 1,
+        }));
       }
       return;
       // Handle down arrow key press
@@ -132,36 +169,41 @@ function SearchBarWithChips() {
 
       console.log("UP ARROW PRESSED");
       console.log("----> event: ", event);
-      if (highlightedIndex > 0) {
-        setHighlightedIndex((prevIndex) => prevIndex - 1);
+      if (state.highlightedIndex > 0) {
+        setState((prevState) => ({
+          ...prevState,
+          highlightedIndex: prevState.highlightedIndex - 1,
+        }));
       }
 
-      // if ArrowUp is pressed and the highlightedIndex is at the begininng
+      // if ArrowUp is pressed and the highlightedIndex is at the beginning
       // of the suggestion array (index == 0),
-      // then set highlightedIndex to -1 (default), allowing user to enter there custom inputs
-      if (highlightedIndex === 0) {
-        setHighlightedIndex(-1);
-        // setIsHidden(true);
+      // then set highlightedIndex to -1 (default), allowing the user to enter their custom inputs
+      if (state.highlightedIndex === 0) {
+        setState((prevState) => ({ ...prevState, highlightedIndex: -1 }));
       }
       return;
       // Handle up arrow key press
     } else if (event.key === "Enter") {
       console.log("ENTER PRESSED");
       console.log("----> event: ", event);
-      // if a non empty query is given AND no suggested  ingredients are highlighted(-1 index)
+      // if a non-empty query is given AND no suggested  ingredients are highlighted(-1 index)
       // THEN add the query to the selectedItems list
-      if (query !== "" && highlightedIndex === -1) {
+      if (state.query !== "" && state.highlightedIndex === -1) {
         console.log(
           "QUERY NOT EMPTY AND highlightedIndex  === -1, adding 'query' to selectedItems "
         );
-        console.log("--> query: ", query);
-        console.log("--> selectedItems: ", selectedItems);
+        console.log("--> query: ", state.query);
+        console.log("--> selectedItems: ", state.selectedItems);
 
-        const updatedItems = [...selectedItems, query];
+        const updatedItems = [...state.selectedItems, state.query];
 
         console.log("--> UPDATING updatedItems: ", updatedItems);
         // setQuery(query);
-        setSelectedItems(updatedItems);
+        setState((prevState) => ({
+          ...prevState,
+          selectedItems: updatedItems,
+        }));
         // setQuery("");
         clearSearch();
         inputRef.current.focus();
@@ -175,22 +217,24 @@ function SearchBarWithChips() {
       // - close the ingredients dropdown (set hidden to true)
       // - clear the search bar
       // - refocus on the search bar
-      if (ingredients.length > 0) {
-        const updatedItems = [...selectedItems, ingredients[highlightedIndex]];
+      if (state.ingredients.length > 0) {
+        const updatedItems = [
+          ...state.selectedItems,
+          state.ingredients[state.highlightedIndex],
+        ];
 
         console.log("--> UPDATING updatedItems: ", updatedItems);
         console.log(
           "--> SELECTING OPTION ingredients[highlightedIndex]: ",
-          ingredients[highlightedIndex]
+          state.ingredients[state.highlightedIndex]
         );
 
-        setQuery(ingredients[highlightedIndex]);
-
-        // add the newly selected item to the selected items list
-        setSelectedItems(updatedItems);
-
-        // close the ingredients dropdown
-        setIsHidden(true);
+        setState((prevState) => ({
+          ...prevState,
+          query: state.ingredients[state.highlightedIndex],
+          selectedItems: updatedItems,
+          isHidden: true,
+        }));
 
         clearSearch();
         inputRef.current.focus();
@@ -198,29 +242,34 @@ function SearchBarWithChips() {
       }
 
       // if no suggested ingredients have been put into ingredients state variable,
-      // and a non empty string has been given, then add this to the selectedItems state list
-      if (query !== "") {
+      // and a non-empty string has been given, then add this to the selectedItems state list
+      if (state.query !== "") {
         console.log("--> highlightedIndex  === -1: ");
-        console.log("--> query: ", query);
+        console.log("--> query: ", state.query);
 
-        const updatedItems = [...selectedItems, query];
+        const updatedItems = [...state.selectedItems, state.query];
         console.log("--> UPDATING updatedItems: ", updatedItems);
-        setSelectedItems(updatedItems);
+        setState((prevState) => ({
+          ...prevState,
+          selectedItems: updatedItems,
+        }));
         // setQuery("");
         clearSearch();
         inputRef.current.focus();
         return;
       }
-    } else if (event.key === "Backspace" && query === "") {
+    } else if (event.key === "Backspace" && state.query === "") {
       event.preventDefault();
 
-      let selected_items = selectedItems;
+      let selected_items = state.selectedItems;
       console.log("------> selected_items: ", selected_items);
       console.log("------> selected_items.length: ", selected_items.length);
       // remove the last item from the selected items list
       if (selected_items.length > 0) {
-        // setIsHidden(true);
-        setSelectedItems(selected_items.slice(0, -1));
+        setState((prevState) => ({
+          ...prevState,
+          selectedItems: selected_items.slice(0, -1),
+        }));
       }
 
       //   if (selected_items.length === 0) {
@@ -233,18 +282,25 @@ function SearchBarWithChips() {
       return;
     }
   }
+
   // handle when a suggested ingredient is clicked from the suggested ingredients dropdown
   function handleItemClick(item) {
     console.log("handleItemClick CLICKED");
     console.log("----> item: ", item);
-    const updatedItems = [...selectedItems, ingredients[highlightedIndex]];
+    const updatedItems = [
+      ...state.selectedItems,
+      state.ingredients[state.highlightedIndex],
+    ];
     console.log("--->handleItemClick updatedItems: ", updatedItems);
     console.log(
       "--->handleItemClick ingredients[highlightedIndex].title: ",
-      ingredients[highlightedIndex].title
+      state.ingredients[state.highlightedIndex].title
     );
 
-    setSelectedItems(updatedItems);
+    setState((prevState) => ({
+      ...prevState,
+      selectedItems: updatedItems,
+    }));
 
     clearSearch();
     inputRef.current.focus(); // Refocus on the input
@@ -255,36 +311,43 @@ function SearchBarWithChips() {
     console.log("DELETE CLICKED");
     console.log("----> toBeRemoved: ", toBeRemoved);
 
-    const newSelectedItems = selectedItems.filter(
+    const newSelectedItems = state.selectedItems.filter(
       (item) => item !== toBeRemoved
     );
-    setIsHidden(true);
-    setSelectedItems(newSelectedItems);
+    setState((prevState) => ({
+      ...prevState,
+      isHidden: true,
+      selectedItems: newSelectedItems,
+    }));
     // inputRef.current.focus(); // Refocus on the input
   }
 
   function isOptionSelected(option) {
-    console.log("isOptionSelected option: ", option);
-    console.log("isOptionSelected query: ", query);
-    console.log("isOptionSelected option === query: ", option === query);
-    // return option.title === query;
-    return option === query;
+    return option === state.query;
   }
-  // resets the query to an empty string and the ingredients to an empty array
+  //   // resets the query to an empty string and the ingredients to an empty array
   function clearSearch() {
-    setQuery("");
-    // setIsHidden(false);
-    setIngredients([]);
+    setState((prevState) => ({
+      ...prevState,
+      query: "",
+      isHidden: false,
+      ingredients: [],
+    }));
   }
+  //     // resets the query to an empty string and the ingredients to an empty array
+  // function clearSearch() {
+  //   setState({
+  //     ...state,
+  //     query: "",
+  //     isHidden: false,
+  //     ingredients: [],
+  //   });
+  // }
 
   return (
     <>
-      <div
-        className={styles.container}
-        // onFocus={() => setIsHidden(false)}
-        // onBlur={() => setIsHidden(true)}
-      >
-        {selectedItems.map((item, index) => (
+      <div className={styles.container}>
+        {state.selectedItems.map((item, index) => (
           <IngredientBadge
             key={index}
             item={item}
@@ -295,55 +358,61 @@ function SearchBarWithChips() {
         ))}
         <input
           ref={inputRef}
-          onFocus={() => setIsHidden(false)}
+          onFocus={() =>
+            setState((prevState) => ({ ...prevState, isHidden: false }))
+          }
           onBlur={async () => {
             setTimeout(() => {
-              setIsHidden(true);
+              setState((prevState) => ({ ...prevState, isHidden: true }));
             }, 200);
           }}
-          //   onBlur={() => setIsHidden(true)}
           type="text"
-          //   autoFocus
           className={styles.textbox}
-          value={query}
-          // onClick={() => setIsHidden((prev) => !prev)}
-          onChange={(e) => setQuery(e.target.value)}
+          value={state.query}
+          onChange={(e) =>
+            setState((prevState) => ({ ...prevState, query: e.target.value }))
+          }
           onKeyDown={handleKeyDown}
           placeholder="Search..."
         />
         <ul
           className={`${styles["options"]} ${
-            !isHidden & (query !== "") & (ingredients.length > 0)
+            !state.isHidden &
+            (state.query !== "") &
+            (state.ingredients.length > 0)
               ? styles["show"]
               : ""
           }`}
         >
-          {ingredients.map((ingred, index) => (
+          {state.ingredients.map((ingred, index) => (
             <li
               key={index}
-              className={`${styles.option} 
-      ${isOptionSelected(ingred) ? styles.selected : ""} 
+              className={`${styles.option}
+      ${isOptionSelected(ingred) ? styles.selected : ""}
       ${
-        index === highlightedIndex && isOptionSelected(ingred)
+        index === state.highlightedIndex && isOptionSelected(ingred)
           ? styles["highlight-selected"]
           : ""
       }
       ${
-        index === highlightedIndex && !isOptionSelected(ingred)
+        index === state.highlightedIndex && !isOptionSelected(ingred)
           ? styles.highlighted
           : ""
       }`}
-              onClick={(e) => {
-                // e.stopPropagation();
-                // selectOption(ingred.suggestions);
-                setQuery(ingred.suggestions);
+              onClick={() => {
+                setState((prevState) => ({
+                  ...prevState,
+                  query: ingred.suggestions,
+                }));
                 handleItemClick(ingred.suggestions);
-                setIsHidden(false);
+                setState((prevState) => ({ ...prevState, isHidden: false }));
                 clearSearch();
               }}
               onMouseEnter={() => {
-                console.log("MOUSE ENTERED");
-                setHighlightedIndex(index);
+                setState((prevState) => ({
+                  ...prevState,
+                  highlightedIndex: index,
+                }));
               }}
             >
               {ingred}
@@ -351,12 +420,460 @@ function SearchBarWithChips() {
           ))}
         </ul>
       </div>
-      <br></br>
+      <div className={styles["search-results-container"]}>
+        {Array.isArray(state.result) &&
+          state.result.map((recipe) => (
+            <div className={styles["search-result-card"]}>
+              <h6>{recipe.dish}</h6>
+              <ul className={styles["search-result-ingredient-list"]}>
+                {recipe.ingredients.map((ingredient, index) => (
+                  <li
+                    key={index}
+                    className={styles["search-result-ingredient-list-element"]}
+                  >
+                    <span>{ingredient}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+      </div>
     </>
   );
 }
 
 export default SearchBarWithChips;
+{
+  /* <div className={styles["search-results-container"]}>
+<div className={styles["search-result-card"]}>
+  <h6>SEARCH RESULT 1</h6>
+  <ul className={styles["search-result-ingredient-list"]}>
+    <li className={styles["search-result-ingredient-list-element"]}>
+      <span>INGREDIENT 1</span>
+    </li>
+    <li className={styles["search-result-ingredient-list-element"]}>
+      <span>INGREDIENT 2</span>
+    </li>
+  </ul>
+</div>
+<div className={styles["search-result-card"]}>
+  <h6>SEARCH RESULT 2</h6>
+  <ul className={styles["search-result-ingredient-list"]}>
+    <li className={styles["search-result-ingredient-list-element"]}>
+      <span>INGREDIENT 1</span>
+    </li>
+    <li className={styles["search-result-ingredient-list-element"]}>
+      <span>INGREDIENT 2</span>
+    </li>
+  </ul>
+</div>
+<div className={styles["search-result-card"]}>
+  <h6>SEARCH RESULT 3</h6>
+  <ul className={styles["search-result-ingredient-list"]}>
+    <li className={styles["search-result-ingredient-list-element"]}>
+      <span>INGREDIENT 1</span>
+    </li>
+    <li className={styles["search-result-ingredient-list-element"]}>
+      <span>INGREDIENT 2</span>
+    </li>
+  </ul>
+</div>
+</div> */
+}
+/* <div className={styles["results-container"]}>
+{state.result.map((recipe) =>
+  recipe.map((r, index) => <RecipeCard key={index} recipe={r} />)
+)}
+</div> */
+//   <div className={styles["results-container"]}>
+//   <RecipeCardGrid recipe={state.result} />
+// </div>
+// #####################################################################################
+// #####################################################################################
+
+// ####################### GOOD TO GO (Multiple state variables) #######################
+// ####################### GOOD TO GO (Multiple state variables) #######################
+
+// // // React component for the search bar with chips
+// import React, { useState, useEffect, useRef } from "react";
+// import { useDebounce } from "../../hooks/useDebounce";
+// import axios from "axios";
+// import styles from "./SearchBar.module.css";
+// import RecipeCard from "./RecipeCard.jsx";
+// import IngredientBadge from "./IngredientBadge";
+// // import "dotenv/config";
+
+// function SearchBarWithChips() {
+//   const [query, setQuery] = useState("");
+
+//   const [isHidden, setIsHidden] = useState(true);
+
+//   const [ingredients, setIngredients] = useState([]);
+//   const [selectedItems, setSelectedItems] = useState([]);
+//   const [selectedIds, setSelectedIds] = useState([]);
+
+//   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+
+//   // save data from selected search items
+//   const [result, setResult] = useState([]);
+
+//   // ref for the input element
+//   const inputRef = useRef();
+
+//   // delay search query until 1 second after user stops typing
+//   useDebounce(
+//     () => {
+//       const fetchData = async () => {
+//         try {
+//           console.log("EXECUTING QUERY: ", query);
+//           console.log("process.env: ", process.env); // remove thi
+//           console.log(
+//             "process.env.REACT_APP_API_URL: ",
+//             process.env.REACT_APP_API_URL
+//           );
+//           console.log(
+//             "query url: ",
+//             `${process.env.REACT_APP_API_URL}/dev/api/v1/suggested-ingredients/?search=${query}&limit=5`
+//           );
+
+//           const { data } = await axios.get(
+//             `${process.env.REACT_APP_API_URL}/dev/api/v1/suggested-ingredients/?search=${query}&limit=5`
+//           );
+
+//           console.log("data: ", data);
+//           console.log("data['suggestions']: ", data["suggestions"]);
+//           console.log("----> selected: ", ingredients);
+
+//           // set the ingredients to the products array
+//           setIngredients(data["suggestions"] || []);
+
+//           console.log("Setting hidden to FALSE");
+
+//           setIsHidden(false);
+//         } catch (error) {
+//           console.log(error);
+//         }
+//       };
+//       if (query) {
+//         fetchData();
+//       }
+//       //   fetchData();
+//     },
+//     2000,
+//     [query]
+//   );
+
+//   useEffect(() => {
+//     // const pid = selectedItems.map(
+//     //   (item) =>
+//     //     `${process.env.REACT_APP_API_URL}/dev/api/v1/dishes-by-ingredients/?ingredients=${item}`
+//     // );
+//     //   base search URL by ingredients
+//     const base_url = `${process.env.REACT_APP_API_URL}/dev/api/v1/dishes-by-ingredients/?ingredients=`;
+
+//     // join all the selected ingredients with "&" delimiter and replace spaces with +
+//     const search_items = selectedItems
+//       .map((str) => str.replace(/\s+/g, "+"))
+//       .join("&ingredients=");
+
+//     // url to query the API for recipes based on the selected ingredients
+//     const search_url = `${base_url}${search_items}&limit=3`;
+//     //   const search_url = `${process.env.REACT_APP_API_URL}/dev/api/v1/dishes-by-ingredients/?ingredients=${search_items}&limit=3`;
+
+//     console.log("=========================");
+//     console.log("==== SECOND API CALL ====");
+//     console.log("selectedItems: ", selectedItems);
+//     console.log("search_items: ", search_items);
+//     console.log("search_url: ", search_url);
+//     console.log("=========================");
+
+//     const fetchResultsData = async (url) => {
+//       try {
+//         console.log("---> QUERYING search_url:\n", search_url);
+
+//         const { data } = await axios.get(search_url);
+
+//         console.log("result: ", result);
+//         console.log("data: ", data);
+
+//         // Update the results state with the fetched data
+
+//         setResult((prevResults) => [...prevResults, data]);
+//         // setResult(data);
+//         // setResult((prevResults) => [...prevResults, ...data]);
+//         console.log("=========================");
+//         // set the results array to response data
+
+//         //   setIngredients(data["products"]);
+//       } catch (error) {
+//         console.log(error);
+//       }
+//     };
+//     if (selectedItems.length === 0) {
+//       setResult([]);
+//     }
+//     if (selectedItems.length > 0) {
+//       console.log("===== CLEARING RESULTS =====");
+//       // Clear the previous results before making new API calls
+//       setResult([]);
+//       // search_url.forEach((url) => fetchResultsData(url));
+//       fetchResultsData(search_url);
+//       console.log("=========================");
+//     }
+//   }, [selectedItems]);
+
+//   // set the highlightedIndex state value to -1 when isHidden changes
+//   useEffect(() => {
+//     if (isHidden) {
+//       setHighlightedIndex(-1);
+//     }
+//   }, [isHidden]);
+
+//   function handleKeyDown(event) {
+//     if (event.key === "ArrowDown") {
+//       event.preventDefault();
+
+//       console.log("DOWN ARROW PRESSED");
+//       console.log("----> event: ", event);
+//       if (highlightedIndex < ingredients.length - 1) {
+//         setHighlightedIndex((prevIndex) => prevIndex + 1);
+//         // setSelectedItem(ingredients[highlightedIndex + 1]);
+//       }
+//       return;
+//       // Handle down arrow key press
+//     } else if (event.key === "ArrowUp") {
+//       event.preventDefault();
+
+//       console.log("UP ARROW PRESSED");
+//       console.log("----> event: ", event);
+//       if (highlightedIndex > 0) {
+//         setHighlightedIndex((prevIndex) => prevIndex - 1);
+//       }
+
+//       // if ArrowUp is pressed and the highlightedIndex is at the begininng
+//       // of the suggestion array (index == 0),
+//       // then set highlightedIndex to -1 (default), allowing user to enter there custom inputs
+//       if (highlightedIndex === 0) {
+//         setHighlightedIndex(-1);
+//         // setIsHidden(true);
+//       }
+//       return;
+//       // Handle up arrow key press
+//     } else if (event.key === "Enter") {
+//       console.log("ENTER PRESSED");
+//       console.log("----> event: ", event);
+//       // if a non empty query is given AND no suggested  ingredients are highlighted(-1 index)
+//       // THEN add the query to the selectedItems list
+//       if (query !== "" && highlightedIndex === -1) {
+//         console.log(
+//           "QUERY NOT EMPTY AND highlightedIndex  === -1, adding 'query' to selectedItems "
+//         );
+//         console.log("--> query: ", query);
+//         console.log("--> selectedItems: ", selectedItems);
+
+//         const updatedItems = [...selectedItems, query];
+
+//         console.log("--> UPDATING updatedItems: ", updatedItems);
+//         // setQuery(query);
+//         setSelectedItems(updatedItems);
+//         // setQuery("");
+//         clearSearch();
+//         inputRef.current.focus();
+//         return;
+//       }
+
+//       // if any suggested ingredients have been
+//       // put into ingredients state variable,
+//       // - select the highlighted ingredient
+//       // - add it to the selectedItems list
+//       // - close the ingredients dropdown (set hidden to true)
+//       // - clear the search bar
+//       // - refocus on the search bar
+//       if (ingredients.length > 0) {
+//         const updatedItems = [...selectedItems, ingredients[highlightedIndex]];
+
+//         console.log("--> UPDATING updatedItems: ", updatedItems);
+//         console.log(
+//           "--> SELECTING OPTION ingredients[highlightedIndex]: ",
+//           ingredients[highlightedIndex]
+//         );
+
+//         setQuery(ingredients[highlightedIndex]);
+
+//         // add the newly selected item to the selected items list
+//         setSelectedItems(updatedItems);
+
+//         // close the ingredients dropdown
+//         setIsHidden(true);
+
+//         clearSearch();
+//         inputRef.current.focus();
+//         return;
+//       }
+
+//       // if no suggested ingredients have been put into ingredients state variable,
+//       // and a non empty string has been given, then add this to the selectedItems state list
+//       if (query !== "") {
+//         console.log("--> highlightedIndex  === -1: ");
+//         console.log("--> query: ", query);
+
+//         const updatedItems = [...selectedItems, query];
+//         console.log("--> UPDATING updatedItems: ", updatedItems);
+//         setSelectedItems(updatedItems);
+//         // setQuery("");
+//         clearSearch();
+//         inputRef.current.focus();
+//         return;
+//       }
+//     } else if (event.key === "Backspace" && query === "") {
+//       event.preventDefault();
+
+//       let selected_items = selectedItems;
+//       console.log("------> selected_items: ", selected_items);
+//       console.log("------> selected_items.length: ", selected_items.length);
+//       // remove the last item from the selected items list
+//       if (selected_items.length > 0) {
+//         // setIsHidden(true);
+//         setSelectedItems(selected_items.slice(0, -1));
+//       }
+
+//       //   if (selected_items.length === 0) {
+//       //     setIsHidden(false);
+//       //   }
+//       // refocus on the input
+//       inputRef.current.focus();
+
+//       //   setIsHidden(true);
+//       return;
+//     }
+//   }
+//   // handle when a suggested ingredient is clicked from the suggested ingredients dropdown
+//   function handleItemClick(item) {
+//     console.log("handleItemClick CLICKED");
+//     console.log("----> item: ", item);
+//     const updatedItems = [...selectedItems, ingredients[highlightedIndex]];
+//     console.log("--->handleItemClick updatedItems: ", updatedItems);
+//     console.log(
+//       "--->handleItemClick ingredients[highlightedIndex].title: ",
+//       ingredients[highlightedIndex].title
+//     );
+
+//     setSelectedItems(updatedItems);
+
+//     clearSearch();
+//     inputRef.current.focus(); // Refocus on the input
+//   }
+
+//   // handle when the remove button is clicked on one of the IngredientBadge components
+//   function handleDeleteClick(toBeRemoved) {
+//     console.log("DELETE CLICKED");
+//     console.log("----> toBeRemoved: ", toBeRemoved);
+
+//     const newSelectedItems = selectedItems.filter(
+//       (item) => item !== toBeRemoved
+//     );
+//     setIsHidden(true);
+//     setSelectedItems(newSelectedItems);
+//     // inputRef.current.focus(); // Refocus on the input
+//   }
+
+//   function isOptionSelected(option) {
+//     // console.log("isOptionSelected option: ", option);
+//     // console.log("isOptionSelected query: ", query);
+//     // console.log("isOptionSelected option === query: ", option === query);
+//     // return option.title === query;
+//     return option === query;
+//   }
+//   // resets the query to an empty string and the ingredients to an empty array
+//   function clearSearch() {
+//     setQuery("");
+//     // setIsHidden(false);
+//     setIngredients([]);
+//   }
+
+//   return (
+//     <>
+//       <div
+//         className={styles.container}
+//         // onFocus={() => setIsHidden(false)}
+//         // onBlur={() => setIsHidden(true)}
+//       >
+//         {selectedItems.map((item, index) => (
+//           <IngredientBadge
+//             key={index}
+//             item={item}
+//             onDeleteClick={() => handleDeleteClick(item)}
+//             onClick={(event) => event.stopPropagation()}
+//             clearSearch={clearSearch}
+//           />
+//         ))}
+//         <input
+//           ref={inputRef}
+//           onFocus={() => setIsHidden(false)}
+//           onBlur={async () => {
+//             setTimeout(() => {
+//               setIsHidden(true);
+//             }, 200);
+//           }}
+//           //   onBlur={() => setIsHidden(true)}
+//           type="text"
+//           //   autoFocus
+//           className={styles.textbox}
+//           value={query}
+//           // onClick={() => setIsHidden((prev) => !prev)}
+//           onChange={(e) => setQuery(e.target.value)}
+//           onKeyDown={handleKeyDown}
+//           placeholder="Search..."
+//         />
+//         <ul
+//           className={`${styles["options"]} ${
+//             !isHidden & (query !== "") & (ingredients.length > 0)
+//               ? styles["show"]
+//               : ""
+//           }`}
+//         >
+//           {ingredients.map((ingred, index) => (
+//             <li
+//               key={index}
+//               className={`${styles.option}
+//       ${isOptionSelected(ingred) ? styles.selected : ""}
+//       ${
+//         index === highlightedIndex && isOptionSelected(ingred)
+//           ? styles["highlight-selected"]
+//           : ""
+//       }
+//       ${
+//         index === highlightedIndex && !isOptionSelected(ingred)
+//           ? styles.highlighted
+//           : ""
+//       }`}
+//               onClick={(e) => {
+//                 // e.stopPropagation();
+//                 // selectOption(ingred.suggestions);
+//                 setQuery(ingred.suggestions);
+//                 handleItemClick(ingred.suggestions);
+//                 setIsHidden(false);
+//                 clearSearch();
+//               }}
+//               onMouseEnter={() => {
+//                 console.log("MOUSE ENTERED");
+//                 setHighlightedIndex(index);
+//               }}
+//             >
+//               {ingred}
+//             </li>
+//           ))}
+//         </ul>
+//       </div>
+//       <br></br>
+//     </>
+//   );
+// }
+
+// export default SearchBarWithChips;
+
+// #####################################################################################
+// #####################################################################################
 
 // // ###############################################
 

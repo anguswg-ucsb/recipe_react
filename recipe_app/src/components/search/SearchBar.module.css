@@ -1,8 +1,10 @@
 .container {
-  position: fixed;
-  top: 25%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
+  margin: 25% auto 0; /* 25% from the top, centered horizontally */
+  /* position: fixed; */
+  /* top: 25%; */
+  /* left: 50%; */
+  /* transform: translate(-50%, -50%); */
   display: flex;
   flex-wrap: wrap;
   width: 20em;
@@ -14,6 +16,7 @@
   padding: 0.5em;
   border-radius: 0.25em;
   outline: none;
+  /* z-index: 2; */
 }
 
 .container:focus {
@@ -147,8 +150,156 @@
   border-color: red;
 }
 
-/* Container for the results */
+.search-results-container {
+  position: relative;
+  margin: 25% auto 0; /* 25% from the top, centered horizontally */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 85%;
+  background-color: lightcoral;
+  border: 0.1em solid black;
+  overflow-y: auto;
+  border-radius: 0.25em;
+  /* outline: none; */
+}
+
+.search-result-card3 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  flex-basis: calc(33.33% - 5%); /* Adjusted for three cards in a row */
+  border: 0.1em solid #000000;
+  background-color: lightyellow;
+  padding: 2%;
+  gap: 1%; /* Adjusted for gap between elements */
+  margin: 2%;
+}
+
+.search-result-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  flex-basis: calc(33.33% - 1em);
+  border: 0.1em solid #000000; /* Adjusted with em values */
+  background-color: lightyellow;
+  padding: 0.5em;
+  gap: 0.5em;
+  margin: 0.5em;
+  border-radius: 0.25em;
+  /* outline: none; */
+}
+.search-result-ingredient-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.25em;
+  /* outline: none; */
+}
+
+.search-result-ingredient-list-element {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border: 0.05em solid #808080;
+  background-color: lightyellow;
+  gap: 0.25em;
+  padding: 0.15em 0.25em;
+  margin: 0.15em 0.25em;
+  border-radius: 0.25em;
+  /* outline: none; */
+  /* display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; */
+}
+
+/* Style for the container div */
+.search-results-container3 {
+  position: relative;
+  margin: 25% auto 0; /* 25% from the top, centered horizontally */
+  /* top: 25%; */
+  /* left: 50%; */
+  /* transform: translate(-50%, -50%); */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  /* width: 75%; */
+  width: 20em;
+  background-color: lightcoral;
+  border: 0.1em solid black;
+
+  overflow-y: auto;
+  /* z-index: 1; */
+}
+
+.search-result-card3 {
+  display: flex;
+  /* flex-direction: column; */
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  flex-basis: calc(33.33% - 1em);
+  border: 0.1em solid #000000; /* Adjusted with em values */
+  background-color: lightyellow;
+  padding: 0.5em;
+  gap: 0.5em;
+  margin: 0.5em;
+}
+.search-result-card2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex-basis: calc(33% - 85px);
+  border: 2.5px solid #000000;
+  background-color: lightcoral;
+  padding: 15px;
+  gap: 5px;
+  margin: 20px;
+}
+/* Style for RecipeCard component */
+.recipe-card {
+  display: flex;
+  flex-grow: 1;
+  border: 1px solid #ccc;
+  padding: 16px;
+  margin: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for the container div */
 .results-container {
+  position: fixed;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-height: 20em;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  background-color: lightyellow;
+  gap: 0.5em;
+  padding: 0.5em;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  bottom: 25%;
+  z-index: -1; /* Set a higher z-index */
+}
+
+/* Container for the results */
+.results-container2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* 3 columns */
   grid-template-rows: repeat(2, 1fr); /* 3 rows */
@@ -159,13 +310,12 @@
 }
 
 /* Style for individual result items */
-.recipe-card {
+.recipe-card2 {
   background: #f4f4f4;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
-
 /* .recipe-card {
   position: relative;
   width: 20em;
