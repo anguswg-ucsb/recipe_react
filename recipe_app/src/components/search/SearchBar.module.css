@@ -1,6 +1,7 @@
-.container {
+/* @import "https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"; */
+.search-bar-container {
   position: relative;
-  margin: 25% auto 0; /* 25% from the top, centered horizontally */
+  margin: 5% auto 0; /* 25% from the top, centered horizontally */
   /* position: fixed; */
   /* top: 25%; */
   /* left: 50%; */
@@ -19,7 +20,7 @@
   /* z-index: 2; */
 }
 
-.container:focus {
+.search-bar-container:focus {
   border-color: hsl(225, 50%, 50%);
 }
 
@@ -316,6 +317,130 @@
   border: 1px solid #ccc;
   border-radius: 5px;
 }
+.card {
+  background-color: white;
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1),
+    0 0px 0 1px rgba(10, 10, 10, 0.02);
+  color: #4a4a4a;
+  max-width: 100%;
+  position: relative;
+}
+
+.card-header:first-child,
+.card-content:first-child,
+.card-footer:first-child {
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+}
+
+.card-header:last-child,
+.card-content:last-child,
+.card-footer:last-child {
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+
+.card-header {
+  background-color: transparent;
+  align-items: stretch;
+  box-shadow: 0 0.125em 0.25em rgba(10, 10, 10, 0.1);
+  display: flex;
+}
+
+.card-header-title {
+  align-items: center;
+  color: #363636;
+  display: flex;
+  flex-grow: 1;
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+}
+
+.card-header-title.is-centered {
+  justify-content: center;
+}
+
+.card-header-icon {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  background: none;
+  border: none;
+  color: currentColor;
+  font-family: inherit;
+  font-size: 1em;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  padding: 0.75rem 1rem;
+}
+
+.card-image {
+  display: block;
+  position: relative;
+}
+
+.card-image:first-child img {
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+}
+
+.card-image:last-child img {
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+}
+.card-content {
+  background-color: transparent;
+  padding: 1.5rem;
+}
+
+.card-equal-height {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.card-equal-height .card-content {
+  flex-grow: 1;
+}
+.card-footer {
+  background-color: transparent;
+  border-top: 1px solid #ededed;
+  align-items: stretch;
+  display: flex;
+}
+
+.card-footer-item {
+  align-items: center;
+  display: flex;
+  flex-basis: 0;
+  flex-grow: 1;
+  flex-shrink: 0;
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.card-footer-item:not(:last-child) {
+  border-right: 1px solid #ededed;
+}
+
+/* Custom CSS to add an "is-active" mode for card-footer-item class */
+.card-footer-item.is-active {
+  background-color: #6283b7;
+  color: #ffffff; /* Adjust text color for better visibility on the blue background */
+  /* Add any other styles you want for the active state */
+}
+
+/* Active status for footer tabs on RecipeCard component */
+/* .card-footer-item.active {
+  background-color: #3273dc;
+  color: #ffffff;
+} */
+
 /* .recipe-card {
   position: relative;
   width: 20em;

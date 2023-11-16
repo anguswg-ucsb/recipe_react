@@ -4,30 +4,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDebounce } from "../../hooks/useDebounce";
 import axios from "axios";
+
+// styling
+import "bulma/css/bulma.min.css"; // Import Bulma styles
 import styles from "./SearchBar.module.css";
+
 import IngredientBadge from "./IngredientBadge";
 import RecipeCard from "./RecipeCard";
-// import Grid from "react-bootstrap/Grid";
-// import Col from "react-bootstrap/Col";
-// import Row from "react-bootstrap/Row";
-import RecipeCardGrid from "./RecipeCardGrid";
-// import Card from "react-bootstrap/Card";
-// import "./Card.css";
 
-let recipe_data = [
-  {
-    dish: "Chicken Parmesan",
-    ingredients: ["chicken", "tomato sauce", "mozzarella cheese"],
-  },
-  {
-    dish: "Chicken Marsala",
-    ingredients: ["chicken", "marsala wine", "mushrooms"],
-  },
-  {
-    dish: "Burrata Chicken Pizza",
-    ingredients: ["pizza dough", "chicken", "tomato sauce", "burrata cheese"],
-  },
-];
+import RecipeCardGrid from "./RecipeCardGrid";
+import ResultGrid from "./ResultGrid";
 
 function SearchBarWithChips() {
   const [state, setState] = useState({
@@ -90,7 +76,7 @@ function SearchBarWithChips() {
 
   useEffect(() => {
     // base search URL by ingredients
-    const base_url = `${process.env.REACT_APP_API_URL}/dev/api/v1/dishes-by-ingredients/?ingredients=`;
+    const base_url = `${process.env.REACT_APP_API_URL}/dev/api/v1/recipes-by-ingredients/?ingredients=`;
 
     // join all the selected ingredients with "&" delimiter and replace spaces with +
     const search_items = state.selectedItems
@@ -98,7 +84,7 @@ function SearchBarWithChips() {
       .join("&ingredients=");
 
     // url to query the API for recipes based on the selected ingredients
-    const search_url = `${base_url}${search_items}&limit=3`;
+    const search_url = `${base_url}${search_items}&limit=10`;
 
     console.log("=========================");
     console.log("==== SECOND API CALL ====");
@@ -334,6 +320,7 @@ function SearchBarWithChips() {
       ingredients: [],
     }));
   }
+
   //     // resets the query to an empty string and the ingredients to an empty array
   // function clearSearch() {
   //   setState({
@@ -344,50 +331,57 @@ function SearchBarWithChips() {
   //   });
   // }
 
+  // CUSTOM CSS "container" CLASS
+  // <div className={styles.container}>
+
+  // BULMA CSS "container" CLASS
+  // <div className="container">
+
   return (
     <>
-      <div className={styles.container}>
-        {state.selectedItems.map((item, index) => (
-          <IngredientBadge
-            key={index}
-            item={item}
-            onDeleteClick={() => handleDeleteClick(item)}
-            onClick={(event) => event.stopPropagation()}
-            clearSearch={clearSearch}
-          />
-        ))}
-        <input
-          ref={inputRef}
-          onFocus={() =>
-            setState((prevState) => ({ ...prevState, isHidden: false }))
-          }
-          onBlur={async () => {
-            setTimeout(() => {
-              setState((prevState) => ({ ...prevState, isHidden: true }));
-            }, 200);
-          }}
-          type="text"
-          className={styles.textbox}
-          value={state.query}
-          onChange={(e) =>
-            setState((prevState) => ({ ...prevState, query: e.target.value }))
-          }
-          onKeyDown={handleKeyDown}
-          placeholder="Search..."
-        />
-        <ul
-          className={`${styles["options"]} ${
-            !state.isHidden &
-            (state.query !== "") &
-            (state.ingredients.length > 0)
-              ? styles["show"]
-              : ""
-          }`}
-        >
-          {state.ingredients.map((ingred, index) => (
-            <li
+      <section class="section">
+        <div className={styles["search-bar-container"]}>
+          {state.selectedItems.map((item, index) => (
+            <IngredientBadge
               key={index}
-              className={`${styles.option}
+              item={item}
+              onDeleteClick={() => handleDeleteClick(item)}
+              onClick={(event) => event.stopPropagation()}
+              clearSearch={clearSearch}
+            />
+          ))}
+          <input
+            ref={inputRef}
+            onFocus={() =>
+              setState((prevState) => ({ ...prevState, isHidden: false }))
+            }
+            onBlur={async () => {
+              setTimeout(() => {
+                setState((prevState) => ({ ...prevState, isHidden: true }));
+              }, 200);
+            }}
+            type="text"
+            className={styles.textbox}
+            value={state.query}
+            onChange={(e) =>
+              setState((prevState) => ({ ...prevState, query: e.target.value }))
+            }
+            onKeyDown={handleKeyDown}
+            placeholder="Search..."
+          />
+          <ul
+            className={`${styles["options"]} ${
+              !state.isHidden &
+              (state.query !== "") &
+              (state.ingredients.length > 0)
+                ? styles["show"]
+                : ""
+            }`}
+          >
+            {state.ingredients.map((ingred, index) => (
+              <li
+                key={index}
+                className={`${styles.option}
       ${isOptionSelected(ingred) ? styles.selected : ""}
       ${
         index === state.highlightedIndex && isOptionSelected(ingred)
@@ -399,50 +393,207 @@ function SearchBarWithChips() {
           ? styles.highlighted
           : ""
       }`}
-              onClick={() => {
-                setState((prevState) => ({
-                  ...prevState,
-                  query: ingred.suggestions,
-                }));
-                handleItemClick(ingred.suggestions);
-                setState((prevState) => ({ ...prevState, isHidden: false }));
-                clearSearch();
-              }}
-              onMouseEnter={() => {
-                setState((prevState) => ({
-                  ...prevState,
-                  highlightedIndex: index,
-                }));
-              }}
-            >
-              {ingred}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className={styles["search-results-container"]}>
-        {Array.isArray(state.result) &&
-          state.result.map((recipe) => (
-            <div className={styles["search-result-card"]}>
-              <h6>{recipe.dish}</h6>
-              <ul className={styles["search-result-ingredient-list"]}>
-                {recipe.ingredients.map((ingredient, index) => (
-                  <li
-                    key={index}
-                    className={styles["search-result-ingredient-list-element"]}
-                  >
-                    <span>{ingredient}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-      </div>
+                onClick={() => {
+                  setState((prevState) => ({
+                    ...prevState,
+                    query: ingred.suggestions,
+                  }));
+                  handleItemClick(ingred.suggestions);
+                  setState((prevState) => ({ ...prevState, isHidden: false }));
+                  clearSearch();
+                }}
+                onMouseEnter={() => {
+                  setState((prevState) => ({
+                    ...prevState,
+                    highlightedIndex: index,
+                  }));
+                }}
+              >
+                {ingred}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+      <section class="section">
+        <div className="container">
+          <div class="columns is-multiline is-flex-grow-1 is-justify-content-space-between">
+            {state.result.map((recipe, index) => (
+              <div
+                // className="column is-multiline is-one-fifth"
+                className="column is-multiline is-4 is-align-items-center is-justify-content-space-between"
+                // className="column is-multiline is-12-mobile is-6-tablet is-4-desktop"
+                key={index}
+              >
+                <RecipeCard
+                  key={recipe.dish_id}
+                  dish={recipe.dish}
+                  ingredients={recipe.ingredients}
+                  quantities={recipe.quantities}
+                  directions={recipe.directions}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </>
   );
 }
 
 export default SearchBarWithChips;
+
+{
+  /* <div className="row columns is-multiline">
+{Array.isArray(state.result) &&
+  state.result.map((recipe, recipe_index) => (
+    <div key={recipe_index} className="column is-2">
+      <div className="card large">
+        <div className="card-header">
+          <span>{recipe.dish}</span>
+        </div>
+        <div className="card-content">
+          <div className="content">
+            {recipe.ingredients.map((ingredient, ingredient_index) => (
+              <div key={ingredient_index}>{ingredient}</div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+<div className="container">
+<div className={`tile is-ancestor`}>
+  <div className="tile is-parent">
+    {Array.isArray(state.result) &&
+      state.result.map((recipe, index) => (
+        // <div key={index} className="tile is-parent is-4">
+        <div className={`tile is-child box`}>
+          <h6>{recipe.dish}</h6>
+          {recipe.ingredients.map((ingredient, i) => (
+            <div
+              key={i}
+              className={
+                styles["search-result-ingredient-list-element"]
+              }
+            >
+              <span>{ingredient}</span>
+            </div>
+          ))}
+        </div>
+        // </div>
+      ))}
+  </div>
+</div>
+</div>
+<div className={styles["search-results-container"]}>
+{Array.isArray(state.result) &&
+  state.result.map((recipe) => (
+    <div className={styles["search-result-card"]}>
+      <h6>{recipe.dish}</h6>
+      <ul className={styles["search-result-ingredient-list"]}>
+        {recipe.ingredients.map((ingredient, index) => (
+          <li
+            key={index}
+            className={styles["search-result-ingredient-list-element"]}
+          >
+            <span>{ingredient}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))}
+</div>
+<div class="tile is-ancestor">
+<div class="tile is-12 is-parent">
+  <div class="tile">
+    <div class="tile is-parent">
+      <article class="tile is-child notification is-info">
+        <p class="title">First tile</p>
+        <p class="subtitle">With an image</p>
+      </article>
+    </div>
+  </div>
+</div>
+</div> */
+}
+{
+  /* <div className="row columns is-multiline">
+  {cardData ? (
+    cardData.map((card) => (
+      <div key={card.id} className="column is-4">
+        <div className="card large">
+          <div className="card-image">
+            <figure className="image is-16by9">
+              <img src={card.image} alt="Image" />
+            </figure>
+          </div>
+          <div className="card-content">
+            <div className="media">
+              <div className="media-left">
+                <figure className="image is-48x48">
+                  <img src={card.avatar} alt="Image" />
+                </figure>
+              </div>
+              <div className="media-content">
+                <p className="title is-4 no-padding">{card.user.title}</p>
+                <p>
+                  <span className="title is-6">
+                    <a href={`http://twitter.com/${card.user.handle}`}>
+                      {card.user.handle}
+                    </a>
+                  </span>
+                </p>
+                <p className="subtitle is-6">{card.user.title}</p>
+              </div>
+            </div>
+            <div className="content">
+              {card.content}
+              <div className="background-icon">
+                <span className="icon-twitter"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    ))
+  ) : (
+    <p>Loading...</p>
+  )}
+</div>; */
+}
+//   <div className="container">
+//   <div className={`tile is-ancestor`}>
+//     <div className="tile is-parent">
+//       {Array.isArray(state.result) &&
+//         // Map over the array in sets of three
+//         state.result.reduce((rows, recipe, index) => {
+//           if (index % 3 === 0) rows.push([]);
+//           rows[rows.length - 1].push(recipe);
+//           return rows;
+//         }, []).map((row, rowIndex) => (
+//           <div key={rowIndex} className="tile is-parent">
+//             {row.map((recipe, colIndex) => (
+//               <div key={colIndex} className={`tile is-child box`}>
+//                 <h6>{recipe.dish}</h6>
+//                 {recipe.ingredients.map((ingredient, i) => (
+//                   <div
+//                     key={i}
+//                     className={
+//                       styles["search-result-ingredient-list-element"]
+//                     }
+//                   >
+//                     <span>{ingredient}</span>
+//                   </div>
+//                 ))}
+//               </div>
+//             ))}
+//           </div>
+//         ))}
+//     </div>
+//   </div>
+// </div>
 {
   /* <div className={styles["search-results-container"]}>
 <div className={styles["search-result-card"]}>
