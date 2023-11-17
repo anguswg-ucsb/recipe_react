@@ -1,3 +1,136 @@
+// RecipeCard.jsx
+import React, { useState } from "react";
+import styles from "./SearchBar.module.css";
+// import customStyles from "./styles/custom-bulma.css";
+
+// example data
+let recipe_data = [
+  {
+    dish_id: 1,
+    dish: "Chicken Parmesan",
+    ingredients: ["chicken", "tomato sauce", "mozzarella cheese"],
+    quantities: ["1", "1 cup", "1 cup"],
+    directions: ["step 1", "step 2", "step 3"],
+  },
+  {
+    dish_id: 2,
+    dish: "Chicken Marsala",
+    ingredients: ["chicken", "marsala wine", "mushrooms"],
+    quantities: ["1", "1 cup", "1 cup"],
+    directions: ["step 1", "step 2", "step 3"],
+  },
+  {
+    dish_id: 3,
+    dish: "Burrata Chicken Pizza",
+    ingredients: ["pizza dough", "chicken", "tomato sauce", "burrata cheese"],
+    quantities: ["1", "1 cup", "1 cup", "1 cup"],
+    directions: ["step 1", "step 2", "step 3"],
+  },
+];
+const RecipeCard = ({
+  dish,
+  ingredients,
+  quantities,
+  directions,
+  percent_match,
+}) => {
+  // const title = recipe.dish;
+  // const ingredients = recipe.ingredients;
+  console.log("===== RECIPE CARD ====");
+  console.log("dish: ", dish);
+  console.log("percent_match: ", percent_match);
+  // console.log("ingredients: ", ingredients);
+  console.log("================");
+
+  const [activeTab, setActiveTab] = useState("ingredients");
+  // const [isExpanded, setIsExpanded] = useState(false);
+
+  // const displayIngredients = isExpanded ? ingredients : ingredients.slice(0, 5);
+  //
+  function handleTabChange(tab) {
+    setActiveTab(tab);
+  }
+
+  function renderTabContent() {
+    switch (activeTab) {
+      case "ingredients":
+        return ingredients.map((ingredient, index) => (
+          <li key={index}>{ingredient}</li>
+        ));
+      case "quantities":
+        return quantities.map((quantity, index) => (
+          <li key={index}>{quantity}</li>
+        ));
+      case "directions":
+        return directions.map((direction, index) => (
+          <li key={index}>{direction}</li>
+        ));
+      default:
+        return null;
+    }
+  }
+  //   <ul>
+  //   <li className={activeTab === "ingredients" ? "is-active" : ""}>
+  //     <a onClick={() => handleTabChange("ingredients")}>
+  //       <span>Ingredients</span>
+  //     </a>
+  //   </li>
+  //   <li className={activeTab === "quantities" ? "is-active" : ""}>
+  //     <a onClick={() => handleTabChange("quantities")}>
+  //       <span>Quantities</span>
+  //     </a>
+  //   </li>
+  //   <li className={activeTab === "directions" ? "is-active" : ""}>
+  //     <a onClick={() => handleTabChange("directions")}>
+  //       <span>Directions</span>
+  //     </a>
+  //   </li>
+  // </ul>
+  // console.log("title", title);
+  // console.log("ingredients", ingredients);
+
+  return (
+    <div className="card">
+      <header className="card-header is-size-6 has-background-warning">
+        <p className="card-header-title">{dish}</p>
+      </header>
+      <div className="card-content is-size-7">
+        <div className="content">{renderTabContent()}</div>
+      </div>
+      <footer className="card-footer">
+        <a
+          // class="card-footer-item"
+          className={`${styles["card-footer-item"]} ${
+            activeTab === "ingredients" ? styles["is-active"] : ""
+          }`}
+          onClick={() => handleTabChange("ingredients")}
+        >
+          Ingreds
+        </a>
+        <a
+          // class="card-footer-item"
+          className={`${styles["card-footer-item"]} ${
+            activeTab === "quantities" ? styles["is-active"] : ""
+          }`}
+          onClick={() => handleTabChange("quantities")}
+        >
+          Quants
+        </a>
+        <a
+          // class="card-footer-item"
+          className={`${styles["card-footer-item"]} ${
+            activeTab === "directions" ? styles["is-active"] : ""
+          }`}
+          onClick={() => handleTabChange("directions")}
+        >
+          Directs
+        </a>
+      </footer>
+    </div>
+  );
+};
+
+export default RecipeCard;
 // // RecipeCard.jsx
 // import React, { useState } from "react";
 // import styles from "./SearchBar.module.css";
@@ -124,132 +257,6 @@
 // };
 
 // export default RecipeCard;
-
-// RecipeCard.jsx
-import React, { useState } from "react";
-import styles from "./SearchBar.module.css";
-// import customStyles from "./styles/custom-bulma.css";
-
-// example data
-let recipe_data = [
-  {
-    dish_id: 1,
-    dish: "Chicken Parmesan",
-    ingredients: ["chicken", "tomato sauce", "mozzarella cheese"],
-    quantities: ["1", "1 cup", "1 cup"],
-    directions: ["step 1", "step 2", "step 3"],
-  },
-  {
-    dish_id: 2,
-    dish: "Chicken Marsala",
-    ingredients: ["chicken", "marsala wine", "mushrooms"],
-    quantities: ["1", "1 cup", "1 cup"],
-    directions: ["step 1", "step 2", "step 3"],
-  },
-  {
-    dish_id: 3,
-    dish: "Burrata Chicken Pizza",
-    ingredients: ["pizza dough", "chicken", "tomato sauce", "burrata cheese"],
-    quantities: ["1", "1 cup", "1 cup", "1 cup"],
-    directions: ["step 1", "step 2", "step 3"],
-  },
-];
-const RecipeCard = ({ dish, ingredients, quantities, directions }) => {
-  // const title = recipe.dish;
-  // const ingredients = recipe.ingredients;
-  console.log("===== RECIPE CARD ====");
-  console.log("dish: ", dish);
-  console.log("ingredients: ", ingredients);
-
-  const [activeTab, setActiveTab] = useState("ingredients");
-  // const [isExpanded, setIsExpanded] = useState(false);
-
-  // const displayIngredients = isExpanded ? ingredients : ingredients.slice(0, 5);
-  //
-  function handleTabChange(tab) {
-    setActiveTab(tab);
-  }
-
-  function renderTabContent() {
-    switch (activeTab) {
-      case "ingredients":
-        return ingredients.map((ingredient, index) => (
-          <li key={index}>{ingredient}</li>
-        ));
-      case "quantities":
-        return quantities.map((quantity, index) => (
-          <li key={index}>{quantity}</li>
-        ));
-      case "directions":
-        return directions.map((direction, index) => (
-          <li key={index}>{direction}</li>
-        ));
-      default:
-        return null;
-    }
-  }
-  //   <ul>
-  //   <li className={activeTab === "ingredients" ? "is-active" : ""}>
-  //     <a onClick={() => handleTabChange("ingredients")}>
-  //       <span>Ingredients</span>
-  //     </a>
-  //   </li>
-  //   <li className={activeTab === "quantities" ? "is-active" : ""}>
-  //     <a onClick={() => handleTabChange("quantities")}>
-  //       <span>Quantities</span>
-  //     </a>
-  //   </li>
-  //   <li className={activeTab === "directions" ? "is-active" : ""}>
-  //     <a onClick={() => handleTabChange("directions")}>
-  //       <span>Directions</span>
-  //     </a>
-  //   </li>
-  // </ul>
-  // console.log("title", title);
-  // console.log("ingredients", ingredients);
-
-  return (
-    <div class="card is-flex-grow-1">
-      <header class="card-header is-size-6 has-background-warning">
-        <p class="card-header-title">{dish}</p>
-      </header>
-      <div className="card-content is-size-7">
-        <div className="content">{renderTabContent()}</div>
-      </div>
-      <footer class="card-footer">
-        <a
-          // class="card-footer-item"
-          className={`${styles["card-footer-item"]} ${
-            activeTab === "ingredients" ? styles["is-active"] : ""
-          }`}
-          onClick={() => handleTabChange("ingredients")}
-        >
-          Ingreds
-        </a>
-        <a
-          // class="card-footer-item"
-          className={`${styles["card-footer-item"]} ${
-            activeTab === "quantities" ? styles["is-active"] : ""
-          }`}
-          onClick={() => handleTabChange("quantities")}
-        >
-          Quants
-        </a>
-        <a
-          // class="card-footer-item"
-          className={`${styles["card-footer-item"]} ${
-            activeTab === "directions" ? styles["is-active"] : ""
-          }`}
-          onClick={() => handleTabChange("directions")}
-        >
-          Directs
-        </a>
-      </footer>
-    </div>
-  );
-};
-
-export default RecipeCard;
 
 // const RecipeCard = ({ dish, ingredients, quantities, directions }) => {
 //   // const title = recipe.dish;

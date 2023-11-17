@@ -1,6 +1,4 @@
 // ####################### GOOD TO GO (Single state object) #######################
-// ####################### GOOD TO GO (Single state object) #######################
-
 import React, { useState, useEffect, useRef } from "react";
 import { useDebounce } from "../../hooks/useDebounce";
 import axios from "axios";
@@ -15,6 +13,32 @@ import RecipeCard from "./RecipeCard";
 import RecipeCardGrid from "./RecipeCardGrid";
 import ResultGrid from "./ResultGrid";
 
+// import "./SearchBar.scss";
+
+// let recipe_data = [
+//   {
+//     dish_id: 1,
+//     dish: "Chicken Parmesan",
+//     ingredients: ["chicken", "tomato sauce", "mozzarella cheese"],
+//     quantities: ["1", "1 cup", "1 cup"],
+//     directions: ["step 1", "step 2", "step 3"],
+//   },
+//   {
+//     dish_id: 2,
+//     dish: "Chicken Marsala",
+//     ingredients: ["chicken", "marsala wine", "mushrooms"],
+//     quantities: ["1", "1 cup", "1 cup"],
+//     directions: ["step 1", "step 2", "step 3"],
+//   },
+//   {
+//     dish_id: 3,
+//     dish: "Burrata Chicken Pizza",
+//     ingredients: ["pizza dough", "chicken", "tomato sauce", "burrata cheese"],
+//     quantities: ["1", "1 cup", "1 cup", "1 cup"],
+//     directions: ["step 1", "step 2", "step 3"],
+//   },
+// ];
+
 function SearchBarWithChips() {
   const [state, setState] = useState({
     query: "",
@@ -23,6 +47,7 @@ function SearchBarWithChips() {
     selectedItems: [],
     highlightedIndex: -1,
     result: [],
+    matchCount: 0,
   });
 
   const inputRef = useRef();
@@ -84,7 +109,7 @@ function SearchBarWithChips() {
       .join("&ingredients=");
 
     // url to query the API for recipes based on the selected ingredients
-    const search_url = `${base_url}${search_items}&limit=10`;
+    const search_url = `${base_url}${search_items}&limit=5`;
 
     console.log("=========================");
     console.log("==== SECOND API CALL ====");
@@ -117,14 +142,17 @@ function SearchBarWithChips() {
         console.log(error);
       }
     };
+
     if (state.selectedItems.length === 0) {
       setState((prevState) => ({ ...prevState, result: [] }));
     }
     if (state.selectedItems.length > 0) {
       console.log("===== CLEARING RESULTS =====");
+
       // Clear the previous results before making new API calls
       setState((prevState) => ({ ...prevState, result: [] }));
       fetchResultsData(search_url);
+
       console.log("=========================");
     }
   }, [state.selectedItems]);
@@ -321,6 +349,53 @@ function SearchBarWithChips() {
     }));
   }
 
+  function matchIngredients(recipes, chosen) {
+    let matches = [];
+
+    recipes.forEach((recipe, index) => {
+      // console.log("recipe[ingreds]: ", recipe["ingredients"], "\n================");
+
+      let recipe_matches = {
+        count: 0,
+        total_ingredients: recipe["ingredients"].length,
+        percent_match: 0,
+        matched_ingredients: [],
+      };
+
+      chosen.forEach((item) => {
+        // console.log("item: ", item);
+        if (recipe["ingredients"].includes(item)) {
+          // console.log("FOUND A MATCH: ", item);
+          recipe_matches.count++;
+          recipe_matches.percent_match =
+            recipe_matches.count / recipe_matches.total_ingredients;
+          recipe_matches.matched_ingredients.push(item);
+        }
+      });
+
+      matches.push(recipe_matches);
+    });
+
+    return matches;
+  }
+  // function percentMatch(recipe, result) {
+  //   let count = 0;
+  //   for (let i = 0; i < recipe.length; i++) {
+  //     if (result.includes(recipe[i])) {
+  //       count++;
+  //     }
+  //   }
+  //   console.log("recipe: ", recipe);
+  //   console.log("result: ", result);
+  //   console.log("count: ", count);
+  //   return count;
+  //   // console.log(
+  //   //   "Math.floor((count / recipe.ingredients.length) * 100): ",
+  //   //   Math.floor((count / recipe.ingredients.length) * 100)
+  //   // );
+
+  //   // return Math.floor((count / recipe.ingredients.length) * 100);
+  // }
   //     // resets the query to an empty string and the ingredients to an empty array
   // function clearSearch() {
   //   setState({
@@ -339,7 +414,7 @@ function SearchBarWithChips() {
 
   return (
     <>
-      <section class="section">
+      <section className="section">
         <div className={styles["search-bar-container"]}>
           {state.selectedItems.map((item, index) => (
             <IngredientBadge
@@ -415,13 +490,13 @@ function SearchBarWithChips() {
           </ul>
         </div>
       </section>
-      <section class="section">
+      <section className="section">
         <div className="container">
-          <div class="columns is-multiline is-flex-grow-1 is-justify-content-space-between">
+          <div className="columns is-multiline">
             {state.result.map((recipe, index) => (
               <div
                 // className="column is-multiline is-one-fifth"
-                className="column is-multiline is-4 is-align-items-center is-justify-content-space-between"
+                className="column is-multiline is-4"
                 // className="column is-multiline is-12-mobile is-6-tablet is-4-desktop"
                 key={index}
               >
