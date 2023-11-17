@@ -1,10 +1,17 @@
-import "bulma/css/bulma.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
-// import "./index.css";
+// import ReactDOM from "react-dom";
+
+// import "./assets/main.css"; // Import your styles
+import "./assets/tailwind.css"; // Import your styles
+
 import App from "./App";
+
 import reportWebVitals from "./reportWebVitals";
+
 // import "bootstrap/dist/css/bootstrap.css"; // Import Bootstrap CSS
+// import "bulma/css/bulma.css";
+// import "./index.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

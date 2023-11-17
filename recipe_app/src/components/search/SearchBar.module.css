@@ -27,6 +27,7 @@
 .value {
   flex-grow: 1;
 }
+/* className="flex-grow border border-solid border-gray-300 h-10 px-2 rounded-md outline-none transition duration-200 focus:border-black" */
 
 .textbox {
   flex-grow: 1;

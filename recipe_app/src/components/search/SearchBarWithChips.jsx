@@ -10,8 +10,8 @@ import styles from "./SearchBar.module.css";
 import IngredientBadge from "./IngredientBadge";
 import RecipeCard from "./RecipeCard";
 
-import RecipeCardGrid from "./RecipeCardGrid";
-import ResultGrid from "./ResultGrid";
+// import RecipeCardGrid from "./RecipeCardGrid";
+// import ResultGrid from "./ResultGrid";
 
 // import "./SearchBar.scss";
 
@@ -95,7 +95,7 @@ function SearchBarWithChips() {
         fetchData();
       }
     },
-    1000,
+    300,
     [state.query]
   );
 
@@ -378,44 +378,12 @@ function SearchBarWithChips() {
 
     return matches;
   }
-  // function percentMatch(recipe, result) {
-  //   let count = 0;
-  //   for (let i = 0; i < recipe.length; i++) {
-  //     if (result.includes(recipe[i])) {
-  //       count++;
-  //     }
-  //   }
-  //   console.log("recipe: ", recipe);
-  //   console.log("result: ", result);
-  //   console.log("count: ", count);
-  //   return count;
-  //   // console.log(
-  //   //   "Math.floor((count / recipe.ingredients.length) * 100): ",
-  //   //   Math.floor((count / recipe.ingredients.length) * 100)
-  //   // );
-
-  //   // return Math.floor((count / recipe.ingredients.length) * 100);
-  // }
-  //     // resets the query to an empty string and the ingredients to an empty array
-  // function clearSearch() {
-  //   setState({
-  //     ...state,
-  //     query: "",
-  //     isHidden: false,
-  //     ingredients: [],
-  //   });
-  // }
-
-  // CUSTOM CSS "container" CLASS
-  // <div className={styles.container}>
-
-  // BULMA CSS "container" CLASS
-  // <div className="container">
 
   return (
     <>
-      <section className="section">
-        <div className={styles["search-bar-container"]}>
+      <section className="flex justify-center">
+        {/* <div className={styles["search-bar-container"]}> */}
+        <div className="relative flex flex-wrap items-center justify-center gap-2 w-80 min-h-12 bg-emerald-100 border border-gray-300 p-2 rounded-md outline-none focus:border-blue-500">
           {state.selectedItems.map((item, index) => (
             <IngredientBadge
               key={index}
@@ -437,6 +405,7 @@ function SearchBarWithChips() {
             }}
             type="text"
             className={styles.textbox}
+            // className="flex-grow border border-solid border-gray-300 h-10 px-2 rounded-md outline-none transition duration-200 focus:border-black"
             value={state.query}
             onChange={(e) =>
               setState((prevState) => ({ ...prevState, query: e.target.value }))
@@ -445,29 +414,49 @@ function SearchBarWithChips() {
             placeholder="Search..."
           />
           <ul
-            className={`${styles["options"]} ${
+            // className={`${styles["options"]} ${
+            //   !state.isHidden &
+            //   (state.query !== "") &
+            //   (state.ingredients.length > 0)
+            //     ? styles["show"]
+            //     : ""
+            // }`}
+            className={`absolute list-none border border-solid border-gray-300 max-h-40 overflow-y-auto rounded-md w-full left-0 top-full bg-white z-10 ${
               !state.isHidden &
-              (state.query !== "") &
+              (state.query !== undefined) &
               (state.ingredients.length > 0)
-                ? styles["show"]
-                : ""
+                ? "block"
+                : undefined
             }`}
           >
             {state.ingredients.map((ingred, index) => (
               <li
                 key={index}
-                className={`${styles.option}
-      ${isOptionSelected(ingred) ? styles.selected : ""}
-      ${
-        index === state.highlightedIndex && isOptionSelected(ingred)
-          ? styles["highlight-selected"]
-          : ""
-      }
-      ${
-        index === state.highlightedIndex && !isOptionSelected(ingred)
-          ? styles.highlighted
-          : ""
-      }`}
+                // className={`${styles.option}
+                // ${isOptionSelected(ingred) ? styles.selected : ""}
+                // ${
+                //   index === state.highlightedIndex && isOptionSelected(ingred)
+                //     ? styles["highlight-selected"]
+                //     : ""
+                // }
+                // ${
+                //   index === state.highlightedIndex && !isOptionSelected(ingred)
+                //     ? styles.highlighted
+                //     : ""
+                // }`}
+                className={`p-2 cursor-pointer ${
+                  isOptionSelected(ingred)
+                    ? "p-2 cursor-pointer bg-emerald-100"
+                    : undefined
+                } ${
+                  index === state.highlightedIndex && isOptionSelected(ingred)
+                    ? "p-2 cursor-pointer bg-emerald-300"
+                    : undefined
+                } ${
+                  index === state.highlightedIndex && !isOptionSelected(ingred)
+                    ? "p-2 cursor-pointer bg-emerald-500"
+                    : ""
+                }`}
                 onClick={() => {
                   setState((prevState) => ({
                     ...prevState,
@@ -491,12 +480,14 @@ function SearchBarWithChips() {
         </div>
       </section>
       <section className="section">
-        <div className="container">
-          <div className="columns is-multiline">
+        <div className="">
+          {/* <div className="columns is-multiline"> */}
+          <div className="flex flex-wrap">
             {state.result.map((recipe, index) => (
               <div
                 // className="column is-multiline is-one-fifth"
-                className="column is-multiline is-4"
+                // className="column is-multiline is-4"
+                className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4"
                 // className="column is-multiline is-12-mobile is-6-tablet is-4-desktop"
                 key={index}
               >

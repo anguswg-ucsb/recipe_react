@@ -1,6 +1,6 @@
 // RecipeCard.jsx
 import React, { useState } from "react";
-import styles from "./SearchBar.module.css";
+// import styles from "./SearchBar.module.css";
 // import customStyles from "./styles/custom-bulma.css";
 
 // example data
@@ -88,49 +88,95 @@ const RecipeCard = ({
   // </ul>
   // console.log("title", title);
   // console.log("ingredients", ingredients);
-
   return (
-    <div className="card">
-      <header className="card-header is-size-6 has-background-warning">
-        <p className="card-header-title">{dish}</p>
+    <div className="flex flex-col justify-center content-center items-center bg-white rounded-md shadow-md p-4">
+      <header className="flex text-sm bg-yellow-200 py-2 px-4 mb-2 rounded-t-md">
+        <p className="font-semibold text-gray-800">{dish}</p>
       </header>
-      <div className="card-content is-size-7">
+      <div className="flex-1 text-xs justify-center content-center items-center">
         <div className="content">{renderTabContent()}</div>
       </div>
-      <footer className="card-footer">
+      <div className="flex-1 flex-row p-3 border-solid object-contain justify-evenly items-center content-between border">
         <a
-          // class="card-footer-item"
-          className={`${styles["card-footer-item"]} ${
-            activeTab === "ingredients" ? styles["is-active"] : ""
+          className={`text-sm p-2 cursor-pointer text-gray-800 ${
+            activeTab === "ingredients" ? "bg-lime-200 text-gray-800" : ""
           }`}
           onClick={() => handleTabChange("ingredients")}
         >
           Ingreds
         </a>
         <a
-          // class="card-footer-item"
-          className={`${styles["card-footer-item"]} ${
-            activeTab === "quantities" ? styles["is-active"] : ""
+          className={`text-sm p-2 cursor-pointer text-gray-800 ${
+            activeTab === "quantities" ? "bg-lime-200 text-gray-800" : ""
           }`}
           onClick={() => handleTabChange("quantities")}
         >
           Quants
         </a>
         <a
-          // class="card-footer-item"
-          className={`${styles["card-footer-item"]} ${
-            activeTab === "directions" ? styles["is-active"] : ""
+          className={`text-sm p-2 cursor-pointer text-gray-800 ${
+            activeTab === "directions" ? "bg-lime-200 text-gray-800" : ""
           }`}
           onClick={() => handleTabChange("directions")}
         >
           Directs
         </a>
-      </footer>
+      </div>
     </div>
   );
+  // return (
+  //   <div className="card">
+  //     <header className="card-header text-sm bg-warning">
+  //       <p className="card-header-title">{dish}</p>
+  //     </header>
+  //     <div className="card-content text-xs">
+  //       <div className="content">{renderTabContent()}</div>
+  //     </div>
+  //     <footer className="card-footer">
+  //       <a
+  //         // class="card-footer-item"
+  //         // className={`${styles["card-footer-item"]} ${
+  //         //   activeTab === "ingredients" ? styles["is-active"] : ""
+  //         // }`}
+
+  //         className={`card-footer-item ${
+  //           activeTab === "ingredients" ? "is-active" : ""
+  //         }`}
+  //         onClick={() => handleTabChange("ingredients")}
+  //       >
+  //         Ingreds
+  //       </a>
+  //       <a
+  //         // class="card-footer-item"
+  //         className={`card-footer-item ${
+  //           activeTab === "quantities" ? "is-active" : ""
+  //         }`}
+  //         // className={`${styles["card-footer-item"]} ${
+  //         //   activeTab === "quantities" ? styles["is-active"] : ""
+  //         // }`}
+  //         onClick={() => handleTabChange("quantities")}
+  //       >
+  //         Quants
+  //       </a>
+  //       <a
+  //         // class="card-footer-item"
+  //         // className={`${styles["card-footer-item"]} ${
+  //         //   activeTab === "directions" ? styles["is-active"] : ""
+  //         // }`}
+  //         className={`card-footer-item ${
+  //           activeTab === "directions" ? "is-active" : ""
+  //         }`}
+  //         onClick={() => handleTabChange("directions")}
+  //       >
+  //         Directs
+  //       </a>
+  //     </footer>
+  //   </div>
+  // );
 };
 
 export default RecipeCard;
+
 // // RecipeCard.jsx
 // import React, { useState } from "react";
 // import styles from "./SearchBar.module.css";
