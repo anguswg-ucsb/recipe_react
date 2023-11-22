@@ -1,6 +1,8 @@
 // ####################### GOOD TO GO (Single state object) #######################
 import React, { useState, useEffect, useRef } from "react";
 import { useDebounce } from "../../hooks/useDebounce";
+import { Transition } from "@headlessui/react";
+
 import axios from "axios";
 
 // styling
@@ -8,7 +10,10 @@ import "bulma/css/bulma.min.css"; // Import Bulma styles
 import styles from "./SearchBar.module.css";
 
 import IngredientBadge from "./IngredientBadge";
-import RecipeCard from "./RecipeCard";
+// import RecipeCard from "./RecipeCard";
+import CardContainer from "./CardContainer";
+
+// import TempTransition from "./TempTransition";
 
 // import RecipeCardGrid from "./RecipeCardGrid";
 // import ResultGrid from "./ResultGrid";
@@ -47,8 +52,11 @@ function SearchBarWithChips() {
     selectedItems: [],
     highlightedIndex: -1,
     result: [],
+    isCardContainerOpen: false,
     matchCount: 0,
   });
+
+  // const [isCardContainerOpen, setIsCardContainerOpen] = useState(false);
 
   const inputRef = useRef();
 
@@ -95,7 +103,7 @@ function SearchBarWithChips() {
         fetchData();
       }
     },
-    300,
+    200,
     [state.query]
   );
 
@@ -151,11 +159,46 @@ function SearchBarWithChips() {
 
       // Clear the previous results before making new API calls
       setState((prevState) => ({ ...prevState, result: [] }));
+      // Update isOpen based on the result
+      // setState((prevState) => ({
+      //   ...prevState,
+      //   isCardContainerOpen: state.result && state.result.length > 0,
+      // }));
+      // const updateIsOpen = state.result && state.result.length > 0;
+
+      // // update isCardContainerOpen state variable
+      // const updateIsOpen = state.result && state.result.length > 0;
+
+      // console.log("~~~~~~~~~~~~~~~~~~~");
+      // console.log("!!!!! updateIsOpen: ", updateIsOpen, " !!!!!");
+      // console.log("~~~~~~~~~~~~~~~~~~~");
+      // setState((prevState) => ({
+      //   ...prevState,
+      //   isCardContainerOpen: updateIsOpen,
+      // }));
+
+      // setState(state.result && state.result.length > 0);
       fetchResultsData(search_url);
 
       console.log("=========================");
     }
   }, [state.selectedItems]);
+
+  // When result state changes, update the isCardContainerOpen state boolean to determine
+  // whether to show the CardContainer or not
+  useEffect(() => {
+    // Update isCardContainerOpen based on the result
+    const updateIsOpen = state.result && state.result.length > 0;
+
+    console.log("~~~~~~~~~~~~~~~~~~~");
+    console.log("!!!!! updateIsOpen: ", updateIsOpen, " !!!!!");
+    console.log("~~~~~~~~~~~~~~~~~~~");
+
+    setState((prevState) => ({
+      ...prevState,
+      isCardContainerOpen: updateIsOpen,
+    }));
+  }, [state.result]);
 
   // set the highlightedIndex state value to -1 when isHidden changes
   useEffect(() => {
@@ -386,7 +429,7 @@ function SearchBarWithChips() {
         <div className="relative flex flex-wrap items-center justify-center gap-2 w-80 min-h-12 bg-emerald-100 border border-gray-300 p-2 rounded-md outline-none focus:border-blue-500">
           {state.selectedItems.map((item, index) => (
             <IngredientBadge
-              key={index}
+              key={`${item}_${index}`}
               item={item}
               onDeleteClick={() => handleDeleteClick(item)}
               onClick={(event) => event.stopPropagation()}
@@ -431,7 +474,8 @@ function SearchBarWithChips() {
           >
             {state.ingredients.map((ingred, index) => (
               <li
-                key={index}
+                // key={index}
+                key={`${ingred.length}_${index}`}
                 // className={`${styles.option}
                 // ${isOptionSelected(ingred) ? styles.selected : ""}
                 // ${
@@ -479,32 +523,160 @@ function SearchBarWithChips() {
           </ul>
         </div>
       </section>
-      <section className="section">
-        <div className="">
-          {/* <div className="columns is-multiline"> */}
-          <div className="flex flex-wrap">
-            {state.result.map((recipe, index) => (
-              <div
-                // className="column is-multiline is-one-fifth"
-                // className="column is-multiline is-4"
-                className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4"
-                // className="column is-multiline is-12-mobile is-6-tablet is-4-desktop"
-                key={index}
-              >
-                <RecipeCard
-                  key={recipe.dish_id}
-                  dish={recipe.dish}
-                  ingredients={recipe.ingredients}
-                  quantities={recipe.quantities}
-                  directions={recipe.directions}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* <Transition
+        show={state.isCardContainerOpen}
+        enter="transition-opacity duration-3500"
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        leave="transition-opacity duration-3500"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+      > */}
+      <CardContainer
+        result={state.result}
+        selected_items={state.selectedItems}
+        isOpen={state.isCardContainerOpen}
+      />
+      {/* </Transition> */}
+      {/* 
+      {state.result && (
+        <CardContainer
+          result={state.result}
+          selected_items={state.selectedItems}
+        />
+      )} */}
     </>
   );
+  // return (
+  //   <>
+  //     <section className="flex justify-center">
+  //       {/* <div className={styles["search-bar-container"]}> */}
+  //       <div className="relative flex flex-wrap items-center justify-center gap-2 w-80 min-h-12 bg-emerald-100 border border-gray-300 p-2 rounded-md outline-none focus:border-blue-500">
+  //         {state.selectedItems.map((item, index) => (
+  //           <IngredientBadge
+  //             key={`${item}_${index}`}
+  //             item={item}
+  //             onDeleteClick={() => handleDeleteClick(item)}
+  //             onClick={(event) => event.stopPropagation()}
+  //             clearSearch={clearSearch}
+  //           />
+  //         ))}
+  //         <input
+  //           ref={inputRef}
+  //           onFocus={() =>
+  //             setState((prevState) => ({ ...prevState, isHidden: false }))
+  //           }
+  //           onBlur={async () => {
+  //             setTimeout(() => {
+  //               setState((prevState) => ({ ...prevState, isHidden: true }));
+  //             }, 200);
+  //           }}
+  //           type="text"
+  //           className={styles.textbox}
+  //           // className="flex-grow border border-solid border-gray-300 h-10 px-2 rounded-md outline-none transition duration-200 focus:border-black"
+  //           value={state.query}
+  //           onChange={(e) =>
+  //             setState((prevState) => ({ ...prevState, query: e.target.value }))
+  //           }
+  //           onKeyDown={handleKeyDown}
+  //           placeholder="Search..."
+  //         />
+  //         <ul
+  //           // className={`${styles["options"]} ${
+  //           //   !state.isHidden &
+  //           //   (state.query !== "") &
+  //           //   (state.ingredients.length > 0)
+  //           //     ? styles["show"]
+  //           //     : ""
+  //           // }`}
+  //           className={`absolute list-none border border-solid border-gray-300 max-h-40 overflow-y-auto rounded-md w-full left-0 top-full bg-white z-10 ${
+  //             !state.isHidden &
+  //             (state.query !== undefined) &
+  //             (state.ingredients.length > 0)
+  //               ? "block"
+  //               : undefined
+  //           }`}
+  //         >
+  //           {state.ingredients.map((ingred, index) => (
+  //             <li
+  //               // key={index}
+  //               key={`${ingred.length}_${index}`}
+  //               // className={`${styles.option}
+  //               // ${isOptionSelected(ingred) ? styles.selected : ""}
+  //               // ${
+  //               //   index === state.highlightedIndex && isOptionSelected(ingred)
+  //               //     ? styles["highlight-selected"]
+  //               //     : ""
+  //               // }
+  //               // ${
+  //               //   index === state.highlightedIndex && !isOptionSelected(ingred)
+  //               //     ? styles.highlighted
+  //               //     : ""
+  //               // }`}
+  //               className={`p-2 cursor-pointer ${
+  //                 isOptionSelected(ingred)
+  //                   ? "p-2 cursor-pointer bg-emerald-100"
+  //                   : undefined
+  //               } ${
+  //                 index === state.highlightedIndex && isOptionSelected(ingred)
+  //                   ? "p-2 cursor-pointer bg-emerald-300"
+  //                   : undefined
+  //               } ${
+  //                 index === state.highlightedIndex && !isOptionSelected(ingred)
+  //                   ? "p-2 cursor-pointer bg-emerald-500"
+  //                   : ""
+  //               }`}
+  //               onClick={() => {
+  //                 setState((prevState) => ({
+  //                   ...prevState,
+  //                   query: ingred.suggestions,
+  //                 }));
+  //                 handleItemClick(ingred.suggestions);
+  //                 setState((prevState) => ({ ...prevState, isHidden: false }));
+  //                 clearSearch();
+  //               }}
+  //               onMouseEnter={() => {
+  //                 setState((prevState) => ({
+  //                   ...prevState,
+  //                   highlightedIndex: index,
+  //                 }));
+  //               }}
+  //             >
+  //               {ingred}
+  //             </li>
+  //           ))}
+  //         </ul>
+  //       </div>
+  //     </section>
+  //     <section className="section">
+  //       <div className="">
+  //         {/* <div className="columns is-multiline"> */}
+  //         {/* <div className="flex items-center justify-center p-10"> */}
+  //         <div className="flex flex-wrap">
+  //           {state.result.map((recipe, index) => (
+  //             <div
+  //               // className="column is-multiline is-one-fifth"
+  //               // className="column is-multiline is-4"
+  //               className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/4 p-4"
+  //               // className="column is-multiline is-12-mobile is-6-tablet is-4-desktop"
+  //               key={index}
+  //             >
+  //               <RecipeCard
+  //                 key={recipe.dish_id}
+  //                 selected_ingredients={state.selectedItems}
+  //                 dish={recipe.dish}
+  //                 ingredients={recipe.ingredients}
+  //                 quantities={recipe.quantities}
+  //                 directions={recipe.directions}
+  //               />
+  //             </div>
+  //           ))}
+  //         </div>
+  //         {/* </div> */}
+  //       </div>
+  //     </section>
+  //   </>
+  // );
 }
 
 export default SearchBarWithChips;

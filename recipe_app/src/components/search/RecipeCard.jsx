@@ -28,6 +28,7 @@ let recipe_data = [
   },
 ];
 const RecipeCard = ({
+  selected_ingredients,
   dish,
   ingredients,
   quantities,
@@ -38,32 +39,58 @@ const RecipeCard = ({
   // const ingredients = recipe.ingredients;
   console.log("===== RECIPE CARD ====");
   console.log("dish: ", dish);
+  console.log("ingredients: ", ingredients);
+  console.log("quantities: ", quantities);
+  console.log("directions: ", directions);
   console.log("percent_match: ", percent_match);
-  // console.log("ingredients: ", ingredients);
   console.log("================");
 
   const [activeTab, setActiveTab] = useState("ingredients");
   // const [isExpanded, setIsExpanded] = useState(false);
+  // const [visible, setVisible] = useState(false);
+
+  // useEffect(() => {
+  //   // Set visible to true after the component has mounted
+  //   setVisible(true);
+  // }, []);
 
   // const displayIngredients = isExpanded ? ingredients : ingredients.slice(0, 5);
   //
   function handleTabChange(tab) {
     setActiveTab(tab);
   }
-
+  // className={`border m-1 ${
+  //   selected_ingredients.includes(ingredient) ? "bg-green-200" : "bg-red-200"
+  // }`}
   function renderTabContent() {
     switch (activeTab) {
       case "ingredients":
         return ingredients.map((ingredient, index) => (
-          <li key={index}>{ingredient}</li>
+          // <li key={index}>{ingredient}</li>
+          <div
+            key={index}
+            className={`border m-1 p-1 rounded-md ${
+              selected_ingredients.includes(ingredient)
+                ? "bg-green-200"
+                : "bg-red-100"
+            }`}
+          >
+            {ingredient}
+          </div>
         ));
       case "quantities":
         return quantities.map((quantity, index) => (
-          <li key={index}>{quantity}</li>
+          // <li key={index}>{quantity}</li>
+          <div key={index} className="border m-1 p-1 bg-slate-50 rounded-md">
+            <span className="font-bold">{index + 1}:</span> {quantity}
+          </div>
         ));
       case "directions":
         return directions.map((direction, index) => (
-          <li key={index}>{direction}</li>
+          // <li key={index}>{direction}</li>
+          <div key={index} className="border m-1 p-1 bg-slate-50 rounded-md">
+            <span className="font-bold">Step {index + 1}: </span> {direction}
+          </div>
         ));
       default:
         return null;
@@ -88,42 +115,235 @@ const RecipeCard = ({
   // </ul>
   // console.log("title", title);
   // console.log("ingredients", ingredients);
+
+  // className={`justify-center p-1 ${
+  //   activeTab === "ingredients" ? "flex flex-wrap" : "flex flex-col"
+  // }`}
+  //     <div className="flex-1 text-xs justify-center content-center items-center">
+  //       {/* <div className="flex flex-wrap justify-center p-1"> */}
+  // <div
+  //   className={`justify-center p-1 ${
+  //     activeTab === "ingredients" ? "flex flex-wrap" : "flex flex-col"
+  //   }`}
+  // >
+  //         {renderTabContent()}
+  //       </div>
+  //     </div>
+
   return (
-    <div className="flex flex-col justify-center content-center items-center bg-white rounded-md shadow-md p-4">
-      <header className="flex text-sm bg-yellow-200 py-2 px-4 mb-2 rounded-t-md">
+    // <div className="flex flex-1 flex-col justify-between rounded overflow-hidden shadow-lg">
+    <div className="transition ease-in delay-1000 rounded relative overflow-hidden shadow-lg">
+      <header className="flex justify-center text-center text-sm bg-yellow-200 py-2 px-4">
         <p className="font-semibold text-gray-800">{dish}</p>
       </header>
-      <div className="flex-1 text-xs justify-center content-center items-center">
-        <div className="content">{renderTabContent()}</div>
+      <div className="px-6 pt-4">
+        <div
+          className={`justify-center p-1 m-1 ${
+            activeTab === "ingredients" ? "flex flex-wrap" : "flex flex-col"
+          }`}
+        >
+          {renderTabContent()}
+        </div>
       </div>
-      <div className="flex-1 flex-row p-3 border-solid object-contain justify-evenly items-center content-between border">
-        <a
-          className={`text-sm p-2 cursor-pointer text-gray-800 ${
-            activeTab === "ingredients" ? "bg-lime-200 text-gray-800" : ""
-          }`}
-          onClick={() => handleTabChange("ingredients")}
-        >
-          Ingreds
-        </a>
-        <a
-          className={`text-sm p-2 cursor-pointer text-gray-800 ${
-            activeTab === "quantities" ? "bg-lime-200 text-gray-800" : ""
-          }`}
-          onClick={() => handleTabChange("quantities")}
-        >
-          Quants
-        </a>
-        <a
-          className={`text-sm p-2 cursor-pointer text-gray-800 ${
-            activeTab === "directions" ? "bg-lime-200 text-gray-800" : ""
-          }`}
-          onClick={() => handleTabChange("directions")}
-        >
-          Directs
-        </a>
+      {/* <div className="flex flex-1 flex-col justify-between"> */}
+      <div className="absolute bottom-0 w-full">
+        <ul className="flex flex-row text-xs font-medium rounded-full text-center object-contain text-gray-500 divide-x divide-gray-200">
+          <li className="flex-1">
+            <button
+              type="button"
+              role="tab"
+              aria-controls="ingredients"
+              aria-selected={activeTab === "ingredients"}
+              className={`inline-block w-full p-4 rounded-ss-lg ${
+                activeTab === "ingredients"
+                  ? "bg-gray-50 hover:bg-gray-100"
+                  : "bg-white hover:bg-gray-50"
+              }`}
+              onClick={() => handleTabChange("ingredients")}
+            >
+              Ingredients
+            </button>
+          </li>
+          <li className="flex-1">
+            <button
+              type="button"
+              role="tab"
+              aria-controls="quantities"
+              aria-selected={activeTab === "quantities"}
+              className={`inline-block w-full p-4 ${
+                activeTab === "quantities"
+                  ? "bg-gray-50 hover:bg-gray-100"
+                  : "bg-white hover:bg-gray-50"
+              }`}
+              onClick={() => handleTabChange("quantities")}
+            >
+              Quantities
+            </button>
+          </li>
+          <li className="flex-1">
+            <button
+              type="button"
+              role="tab"
+              aria-controls="directions"
+              aria-selected={activeTab === "directions"}
+              className={`inline-block w-full p-4 rounded-se-lg ${
+                activeTab === "directions"
+                  ? "bg-gray-50 hover:bg-gray-100"
+                  : "bg-white hover:bg-gray-50"
+              }`}
+              onClick={() => handleTabChange("directions")}
+            >
+              Directions
+            </button>
+          </li>
+        </ul>
       </div>
+      {/* </div> */}
     </div>
   );
+
+  // return (
+  //   <div className="flex-col w-full mx-auto bg-white border border-gray-200 rounded-lg shadow">
+  //     {/* <header className="flex text-sm bg-yellow-200 py-2 px-4 mb-2 rounded-t-md"> */}
+  //     {/* <header className="flex text-sm bg-yellow-200 py-2 px-4 rounded-t-md"> */}
+  //     <header className="flex justify-center text-center text-sm bg-yellow-200 py-2 px-4">
+  //       <p className="font-semibold text-gray-800">{dish}</p>
+  //     </header>
+  //     {/* <div className="border-t border-gray-200"> */}
+  //     <div className="flex text-xs justify-center content-center items-center">
+  //       <div
+  //         className={`justify-center p-1 ${
+  //           activeTab === "ingredients" ? "flex flex-wrap" : "flex flex-col"
+  //         }`}
+  //       >
+  //         {renderTabContent()}
+  //       </div>
+  //     </div>
+  //     <div className="sm:hidden">
+  //       <label htmlFor="tabs" className="sr-only">
+  //         Select tab
+  //       </label>
+  //       <select
+  //         id="tabs"
+  //         className="bg-gray-50 border-0 border-b border-gray-200 text-gray-900 text-sm rounded-t-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+  //         onChange={(e) => handleTabChange(e.target.value)}
+  //       >
+  //         <option value="ingredients">Ingredients</option>
+  //         <option value="quantities">Quantities</option>
+  //         <option value="directions">Directions</option>
+  //       </select>
+  //     </div>
+  //     <ul className="flex flex-row hidden text-xs font-medium text-center object-contain text-gray-500 divide-x divide-gray-200 rounded-lg sm:flex">
+  //       <li className="w-full">
+  //         <button
+  //           type="button"
+  //           role="tab"
+  //           aria-controls="ingredients"
+  //           aria-selected={activeTab === "ingredients"}
+  //           // className={`text-sm p-2 cursor-pointer text-gray-800 ${
+  //           //   activeTab === "ingredients"
+  //           //     ? "bg-blue-200 text-gray-800 rounded-sm"
+  //           //     : ""
+  //           // }`}
+  //           // className={`text-sm p-2 cursor-pointer text-gray-800 ${
+  //           //   activeTab === "ingredients"
+  //           //     ? "bg-gray-50 hover:bg-gray-100"
+  //           //     : "bg-white hover:bg-gray-50"
+  //           //   }`}
+  //           className={`inline-block w-full p-4 rounded-ss-lg ${
+  //             activeTab === "ingredients"
+  //               ? "bg-gray-50 hover:bg-gray-100"
+  //               : "bg-white hover:bg-gray-50"
+  //           }`}
+  //           onClick={() => handleTabChange("ingredients")}
+  //         >
+  //           Ingredients
+  //         </button>
+  //       </li>
+  //       <li className="w-full">
+  //         <button
+  //           type="button"
+  //           role="tab"
+  //           aria-controls="quantities"
+  //           aria-selected={activeTab === "quantities"}
+  //           className={`inline-block w-full p-4 ${
+  //             activeTab === "quantities"
+  //               ? "bg-gray-50 hover:bg-gray-100"
+  //               : "bg-white hover:bg-gray-50"
+  //           }`}
+  //           onClick={() => handleTabChange("quantities")}
+  //         >
+  //           Quantities
+  //         </button>
+  //       </li>
+  //       <li className="w-full">
+  //         <button
+  //           type="button"
+  //           role="tab"
+  //           aria-controls="directions"
+  //           aria-selected={activeTab === "directions"}
+  //           className={`inline-block w-full p-4 rounded-se-lg ${
+  //             activeTab === "directions"
+  //               ? "bg-gray-50 hover:bg-gray-100"
+  //               : "bg-white hover:bg-gray-50"
+  //           }`}
+  //           onClick={() => handleTabChange("directions")}
+  //         >
+  //           Directions
+  //         </button>
+  //       </li>
+  //     </ul>
+  //   </div>
+  // );
+  // return (
+  //   <div className="flex flex-col justify-center content-center items-center bg-white rounded-md shadow-md p-4">
+  // <header className="flex text-sm bg-yellow-200 py-2 px-4 mb-2 rounded-t-md">
+  //   <p className="font-semibold text-gray-800">{dish}</p>
+  // </header>
+  //     <div className="flex-1 text-xs justify-center content-center items-center">
+  //       {/* <div className="flex flex-wrap justify-center p-1"> */}
+  //       <div
+  //         className={`justify-center p-1 ${
+  //           activeTab === "ingredients" ? "flex flex-wrap" : "flex flex-col"
+  //         }`}
+  //       >
+  //         {renderTabContent()}
+  //       </div>
+  //     </div>
+  //     <div className="flex-1 flex-row p-3 object-contain justify-evenly items-center content-between border">
+  //       <a
+  //         className={`text-sm p-2 cursor-pointer text-gray-800 ${
+  //           activeTab === "ingredients"
+  //             ? "bg-blue-200 text-gray-800 rounded-sm"
+  //             : ""
+  //         }`}
+  //         onClick={() => handleTabChange("ingredients")}
+  //       >
+  //         Ingreds
+  //       </a>
+  //       <a
+  //         className={`text-sm p-2 cursor-pointer text-gray-800 ${
+  //           activeTab === "quantities"
+  //             ? "bg-blue-200 text-gray-800 rounded-sm"
+  //             : ""
+  //         }`}
+  //         onClick={() => handleTabChange("quantities")}
+  //       >
+  //         Quants
+  //       </a>
+  //       <a
+  //         className={`text-sm p-2 cursor-pointer text-gray-800 ${
+  //           activeTab === "directions"
+  //             ? "bg-blue-200 text-gray-800 rounded-sm"
+  //             : ""
+  //         }`}
+  //         onClick={() => handleTabChange("directions")}
+  //       >
+  //         Directs
+  //       </a>
+  //     </div>
+  //   </div>
+  // );
   // return (
   //   <div className="card">
   //     <header className="card-header text-sm bg-warning">
