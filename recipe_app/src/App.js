@@ -4,6 +4,7 @@ import React from "react";
 
 // // Components
 import SearchBarWithChips from "./components/search/SearchBarWithChips";
+import ComboBoxSearch from "./components/search/ComboBoxSearch";
 // import NavBar from "./components/navbar/NavBar";
 
 // import "bulma/css/bulma.min.css"; // Import Bulma styles
@@ -16,6 +17,7 @@ import SearchBarWithChips from "./components/search/SearchBarWithChips";
 function App() {
   return (
     <>
+      {/* <ComboBoxSearch /> */}
       <SearchBarWithChips />
     </>
   );
