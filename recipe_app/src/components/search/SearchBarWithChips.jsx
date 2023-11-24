@@ -460,7 +460,7 @@ function SearchBarWithChips() {
             }}
             type="text"
             // className={styles.textbox}
-            className="flex-grow border border-solid border-gray-300 h-10 px-2 rounded-md outline-none transition duration-200 focus:border-black-400 focus:ring-black-300 focus:outline-none focus:ring focus:ring-opacity-40 box-border"
+            className="flex-grow border border-solid border-gray-300 h-10 px-2 rounded-md outline-none transition duration-200 focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40 box-border"
             // className="block w-full px-4 py-2 text-purple-700 bg-white border rounded-md focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40 box-border"
             // className="block w-full transition ease-in-out delay-0.2s px-4 py-2 text-purple-700 bg-white box-border border rounded-md focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40"
             // className="flex-grow border border-solid border-gray-300 h-10 px-2 rounded-md outline-none transition duration-200 focus:border-black"
