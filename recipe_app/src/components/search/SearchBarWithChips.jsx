@@ -16,6 +16,8 @@ import axios from "axios";
 import IngredientBadge from "./IngredientBadge";
 // import RecipeCard from "./RecipeCard";
 import CardContainer from "./CardContainer";
+import RecipePill from "./RecipePill";
+import PillContainer from "./PillContainer";
 // import TempTransition from "./TempTransition";
 
 // import RecipeCardGrid from "./RecipeCardGrid";
@@ -118,7 +120,7 @@ function SearchBarWithChips() {
       .join("&ingredients=");
 
     // url to query the API for recipes based on the selected ingredients
-    const search_url = `${base_url}${search_items}&limit=5`;
+    const search_url = `${base_url}${search_items}&limit=8`;
 
     console.log("=========================");
     console.log("==== SECOND API CALL ====");
@@ -437,7 +439,7 @@ function SearchBarWithChips() {
         <div
           // ref={inputRef}
           // tabIndex={0}
-          className="relative flex flex-wrap items-center justify-center gap-1 w-80 bg-emerald-100 box-border border border-gray-300 p-2 rounded-md outline-none focus:border-blue-500"
+          className="relative flex flex-wrap items-center justify-center gap-1 w-80 bg-emerald-100 box-border border border-gray-300 p-2 rounded-md outline-none focus:border-blue-500 shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl"
         >
           {state.selectedItems.map((item, index) => (
             <IngredientBadge
@@ -556,11 +558,24 @@ function SearchBarWithChips() {
           </ul>
         </div>
       </section>
-      <CardContainer
+      <section className="flex justify-center">
+        <PillContainer
+          result={state.result}
+          selected_items={state.selectedItems}
+          isOpen={state.isCardContainerOpen}
+        />
+
+        {/* <RecipePill
+          dish={"Chicken yummy"}
+          ingredients={["45523", "453", "422", "gfgf", "4222235r"]}
+          selected_ingredients={["4232", "2142"]}
+        /> */}
+      </section>
+      {/* <CardContainer
         result={state.result}
         selected_items={state.selectedItems}
         isOpen={state.isCardContainerOpen}
-      />
+      /> */}
     </>
   );
 }
