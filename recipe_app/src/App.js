@@ -5,6 +5,8 @@ import React from "react";
 // // Components
 import SearchBarWithChips from "./components/search/SearchBarWithChips";
 import ComboBoxSearch from "./components/search/ComboBoxSearch";
+import SearchWithSuggestions from "./components/search/SearchWithSuggestions";
+import SearchBarWithPills from "./components/search/SearchBarWithPills";
 // import NavBar from "./components/navbar/NavBar";
 
 // import "bulma/css/bulma.min.css"; // Import Bulma styles
@@ -18,7 +20,9 @@ function App() {
   return (
     <>
       {/* <ComboBoxSearch /> */}
-      <SearchBarWithChips />
+      {/* <SearchBarWithChips /> */}
+      {/* <SearchWithSuggestions /> */}
+      <SearchBarWithPills />
     </>
   );
 }

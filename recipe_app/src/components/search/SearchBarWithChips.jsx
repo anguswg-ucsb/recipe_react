@@ -431,151 +431,104 @@ function SearchBarWithChips() {
 
     return matches;
   }
+  // let search_grid_style = "grid grid-cols-6 shadow-lg overflow-hidden";
 
   return (
     <>
-      <section className="flex justify-center">
-        {/* <div className={styles["search-bar-container"]}> */}
-        <div
-          // ref={inputRef}
-          // tabIndex={0}
-          className="relative flex flex-wrap items-center justify-center gap-1 w-80 bg-emerald-100 box-border border border-gray-300 p-2 rounded-md outline-none focus:border-blue-500 shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl"
-        >
-          {state.selectedItems.map((item, index) => (
-            <IngredientBadge
-              key={`${item}_${index}`}
-              item={item}
-              onDeleteClick={() => handleDeleteClick(item)}
-              onClick={(event) => event.stopPropagation()}
-              clearSearch={clearSearch}
-            />
-          ))}
-          <input
-            ref={inputRef}
-            onFocus={() =>
-              setState((prevState) => ({ ...prevState, isHidden: false }))
-            }
-            onBlur={async () => {
-              setTimeout(() => {
-                setState((prevState) => ({ ...prevState, isHidden: true }));
-              }, 200);
-            }}
-            type="text"
-            // className={styles.textbox}
-            className="flex-grow border border-solid border-gray-300 h-10 px-2 rounded-md outline-none transition duration-200 focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40 box-border"
-            // className="block w-full px-4 py-2 text-purple-700 bg-white border rounded-md focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40 box-border"
-            // className="block w-full transition ease-in-out delay-0.2s px-4 py-2 text-purple-700 bg-white box-border border rounded-md focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40"
-            // className="flex-grow border border-solid border-gray-300 h-10 px-2 rounded-md outline-none transition duration-200 focus:border-black"
-            value={state.query}
-            onChange={(e) =>
-              setState((prevState) => ({ ...prevState, query: e.target.value }))
-            }
-            onKeyDown={handleKeyDown}
-            placeholder="Search..."
-          />
-          <ul
-            // className={`${styles["options"]} ${
-            //   !state.isHidden &
-            //   (state.query !== "") &
-            //   (state.ingredients.length > 0)
-            //     ? styles["show"]
-            //     : ""
-            // }`}
-            // className={`absolute list-none border border-solid border-gray-300 max-h-40 overflow-y-auto rounded-md w-full left-0 top-full bg-white z-10 ${
-            //   !state.isHidden &
-            //   (state.query !== undefined) &
-            //   (state.ingredients.length > 0)
-            //     ? "block"
-            //     : undefined
-            // }`}
-            className={`absolute list-none border border-solid border-gray-300 max-h-40 overflow-y-auto rounded-md w-full left-0 top-full bg-white z-10 ${
-              state.query && state.ingredients.length > 0 && !state.isHidden
-                ? "block"
-                : "hidden"
-            }`}
+      <div class="relative">
+        {/* <div className="fixed z-10 flex justify-center"> */}
+        <div className="relative flex justify-center">
+          <div
+            // ref={inputRef}
+            // tabIndex={0}
+            className="relative flex flex-wrap items-center justify-center gap-1 w-80 bg-emerald-100 box-border border border-gray-300 p-2 rounded-md outline-none focus:border-blue-500 shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl"
           >
-            {state.ingredients.map((ingred, index) => (
-              <li
-                // key={index}
-                key={`${ingred.length}_${index}`}
-                // className={`${styles.option}
-                // ${isOptionSelected(ingred) ? styles.selected : ""}
-                // ${
-                //   index === state.highlightedIndex && isOptionSelected(ingred)
-                //     ? styles["highlight-selected"]
-                //     : ""
-                // }
-                // ${
-                //   index === state.highlightedIndex && !isOptionSelected(ingred)
-                //     ? styles.highlighted
-                //     : ""
-                // }`}
-                // className={`p-2 cursor-pointer ${
-                //   isOptionSelected(ingred)
-                //     ? "p-2 cursor-pointer bg-emerald-100"
-                //     : undefined
-                // } ${
-                //   index === state.highlightedIndex && isOptionSelected(ingred)
-                //     ? "p-2 cursor-pointer bg-emerald-300"
-                //     : undefined
-                // } ${
-                //   index === state.highlightedIndex && !isOptionSelected(ingred)
-                //     ? "p-2 cursor-pointer bg-emerald-500"
-                //     : ""
-                // }`}
-                className={`p-2 cursor-pointer ${
-                  isOptionSelected(ingred)
-                    ? "p-2 cursor-pointer bg-emerald-100 text-yellow-500"
-                    : undefined
-                } ${
-                  index === state.highlightedIndex
-                    ? "p-2 cursor-pointer bg-emerald-100 border rounded-md border-solid border-emerald-500"
-                    : undefined
-                } 
-                `}
-                // className={`${styles.option} ${
-                //   isOptionSelected(option) ? styles.selected : ""
-                // } ${index === highlightedIndex ? styles.highlighted : ""}`}
-                onClick={() => {
-                  setState((prevState) => ({
-                    ...prevState,
-                    query: ingred.suggestions,
-                  }));
-                  handleItemClick(ingred.suggestions);
-                  // setState((prevState) => ({ ...prevState, isHidden: false }));
-                  clearSearch();
-                }}
-                onMouseEnter={() => {
-                  setState((prevState) => ({
-                    ...prevState,
-                    highlightedIndex: index,
-                  }));
-                }}
-              >
-                {ingred}
-              </li>
+            {state.selectedItems.map((item, index) => (
+              <IngredientBadge
+                key={`${item}_${index}`}
+                item={item}
+                onDeleteClick={() => handleDeleteClick(item)}
+                onClick={(event) => event.stopPropagation()}
+                clearSearch={clearSearch}
+              />
             ))}
-          </ul>
+            <input
+              ref={inputRef}
+              onFocus={() =>
+                setState((prevState) => ({ ...prevState, isHidden: false }))
+              }
+              onBlur={async () => {
+                setTimeout(() => {
+                  setState((prevState) => ({ ...prevState, isHidden: true }));
+                }, 200);
+              }}
+              type="text"
+              // className={styles.textbox}
+              className="flex-grow border border-solid border-gray-300 h-10 px-2 rounded-md outline-none transition duration-200 focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40 box-border"
+              value={state.query}
+              onChange={(e) =>
+                setState((prevState) => ({
+                  ...prevState,
+                  query: e.target.value,
+                }))
+              }
+              onKeyDown={handleKeyDown}
+              placeholder="Search..."
+            />
+            <ul
+              className={`z-100 list-none border border-solid border-gray-300 max-h-40 overflow-y-scroll rounded-md w-full left-0 top-full bg-white ${
+                // className={`z-100 absolute list-none border border-solid border-gray-300 max-h-40 overflow-y-auto rounded-md w-full left-0 top-full bg-white ${
+                state.query && state.ingredients.length > 0 && !state.isHidden
+                  ? ""
+                  : "hidden"
+              }`}
+            >
+              {state.ingredients.map((ingred, index) => (
+                <li
+                  key={`${ingred.length}_${index}`}
+                  className={`p-2 cursor-pointer ${
+                    isOptionSelected(ingred)
+                      ? "p-2 cursor-pointer bg-emerald-100 text-yellow-500"
+                      : undefined
+                  } ${
+                    index === state.highlightedIndex
+                      ? "p-2 cursor-pointer bg-emerald-100 border rounded-md border-solid border-emerald-500"
+                      : undefined
+                  } 
+                `}
+                  // className={`${styles.option} ${
+                  //   isOptionSelected(option) ? styles.selected : ""
+                  // } ${index === highlightedIndex ? styles.highlighted : ""}`}
+                  onClick={() => {
+                    setState((prevState) => ({
+                      ...prevState,
+                      query: ingred.suggestions,
+                    }));
+                    handleItemClick(ingred.suggestions);
+                    // setState((prevState) => ({ ...prevState, isHidden: false }));
+                    clearSearch();
+                  }}
+                  onMouseEnter={() => {
+                    setState((prevState) => ({
+                      ...prevState,
+                      highlightedIndex: index,
+                    }));
+                  }}
+                >
+                  {ingred}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-      </section>
-      <section className="flex justify-center">
-        <PillContainer
-          result={state.result}
-          selected_items={state.selectedItems}
-          isOpen={state.isCardContainerOpen}
-        />
-
-        {/* <RecipePill
-          dish={"Chicken yummy"}
-          ingredients={["45523", "453", "422", "gfgf", "4222235r"]}
-          selected_ingredients={["4232", "2142"]}
-        /> */}
-      </section>
-      {/* <CardContainer
-        result={state.result}
-        selected_items={state.selectedItems}
-        isOpen={state.isCardContainerOpen}
-      /> */}
+        <div className="flex justify-center">
+          <PillContainer
+            result={state.result}
+            selected_items={state.selectedItems}
+            isOpen={state.isCardContainerOpen}
+          />
+        </div>
+      </div>
     </>
   );
 }
