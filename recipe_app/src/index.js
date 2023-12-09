@@ -9,8 +9,6 @@ import App from "./App";
 
 import reportWebVitals from "./reportWebVitals";
 
-// import "bootstrap/dist/css/bootstrap.css"; // Import Bootstrap CSS
-// import "bulma/css/bulma.css";
 // import "./index.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

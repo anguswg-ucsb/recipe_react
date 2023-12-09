@@ -10,10 +10,8 @@ import SearchBarWithPills from "./components/search/SearchBarWithPills";
 import SearchBarContainer from "./components/search/SearchBarContainer";
 // import NavBar from "./components/navbar/NavBar";
 
-// import "bulma/css/bulma.min.css"; // Import Bulma styles
 // import "./App.css";
 // import "./index.css";
-// import "bootstrap/dist/css/bootstrap.min.css";
 
 // import ResultGrid from "./components/search/ResultGrid";
 
@@ -29,7 +27,5 @@ function App() {
   );
 }
 {
-  /* <ResultGrid cardData={cardsData} /> 
-    <SearchBarWithChips />  */
 }
 export default App;

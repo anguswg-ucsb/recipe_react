@@ -3,49 +3,49 @@
 // RecipePill.jsx
 import React, { useState, useEffect } from "react";
 
-let selected_ingredients = ["chicken", "carrot", "ketchup", "bread", "pickles"];
+// let selected_ingredients = ["chicken", "carrot", "ketchup", "bread", "pickles"];
 
 // // example data
-let recipe_data = [
-  {
-    dish_id: 1,
-    dish: "Chicken Parmesan",
-    ingredients: [
-      "chicken",
-      "tomato sauce",
-      "mozzarella cheese",
-      "apple",
-      "banana",
-      "carrot",
-      "ketchup",
-      "bread",
-      "pickles",
-    ],
-    quantities: ["1", "1 cup", "1 cup"],
-    directions: ["step 1", "step 2", "step 3"],
-  },
-  {
-    dish_id: 2,
-    dish: "Chicken Marsala",
-    ingredients: ["chicken", "marsala wine", "mushrooms"],
-    quantities: ["1", "1 cup", "1 cup"],
-    directions: ["step 1", "step 2", "step 3"],
-  },
-  {
-    dish_id: 3,
-    dish: "Burrata Chicken Pizza",
-    ingredients: ["pizza dough", "chicken", "tomato sauce", "burrata cheese"],
-    quantities: ["1", "1 cup", "1 cup", "1 cup"],
-    directions: ["step 1", "step 2", "step 3"],
-  },
-  {
-    dish_id: 4,
-    dish: "Chicken Picatta",
-    ingredients: ["chicken", "tomato sauce", "mozzarella cheese"],
-    quantities: ["1", "1 cup", "1 cup"],
-    directions: ["step 1", "step 2", "step 3"],
-  },
-];
+// let recipe_data = [
+//   {
+//     dish_id: 1,
+//     dish: "Chicken Parmesan",
+//     ingredients: [
+//       "chicken",
+//       "tomato sauce",
+//       "mozzarella cheese",
+//       "apple",
+//       "banana",
+//       "carrot",
+//       "ketchup",
+//       "bread",
+//       "pickles",
+//     ],
+//     quantities: ["1", "1 cup", "1 cup"],
+//     directions: ["step 1", "step 2", "step 3"],
+//   },
+//   {
+//     dish_id: 2,
+//     dish: "Chicken Marsala",
+//     ingredients: ["chicken", "marsala wine", "mushrooms"],
+//     quantities: ["1", "1 cup", "1 cup"],
+//     directions: ["step 1", "step 2", "step 3"],
+//   },
+//   {
+//     dish_id: 3,
+//     dish: "Burrata Chicken Pizza",
+//     ingredients: ["pizza dough", "chicken", "tomato sauce", "burrata cheese"],
+//     quantities: ["1", "1 cup", "1 cup", "1 cup"],
+//     directions: ["step 1", "step 2", "step 3"],
+//   },
+//   {
+//     dish_id: 4,
+//     dish: "Chicken Picatta",
+//     ingredients: ["chicken", "tomato sauce", "mozzarella cheese"],
+//     quantities: ["1", "1 cup", "1 cup"],
+//     directions: ["step 1", "step 2", "step 3"],
+//   },
+// ];
 
 const RecipePill = ({
   dish,

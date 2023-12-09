@@ -5,45 +5,14 @@ import { Transition } from "@headlessui/react";
 
 import axios from "axios";
 
-// styling
-// import "bulma/css/bulma.min.css"; // Import Bulma styles
-// import styles from "./SearchBar.module.css";
-
 import IngredientBadge from "./IngredientBadge";
 // import RecipeCard from "./RecipeCard";
 import CardContainer from "./CardContainer";
 import RecipePill from "./RecipePill";
 import PillContainer from "./PillContainer";
-// import TempTransition from "./TempTransition";
 
 // import RecipeCardGrid from "./RecipeCardGrid";
 // import ResultGrid from "./ResultGrid";
-
-// import "./SearchBar.scss";
-
-// let recipe_data = [
-//   {
-//     dish_id: 1,
-//     dish: "Chicken Parmesan",
-//     ingredients: ["chicken", "tomato sauce", "mozzarella cheese"],
-//     quantities: ["1", "1 cup", "1 cup"],
-//     directions: ["step 1", "step 2", "step 3"],
-//   },
-//   {
-//     dish_id: 2,
-//     dish: "Chicken Marsala",
-//     ingredients: ["chicken", "marsala wine", "mushrooms"],
-//     quantities: ["1", "1 cup", "1 cup"],
-//     directions: ["step 1", "step 2", "step 3"],
-//   },
-//   {
-//     dish_id: 3,
-//     dish: "Burrata Chicken Pizza",
-//     ingredients: ["pizza dough", "chicken", "tomato sauce", "burrata cheese"],
-//     quantities: ["1", "1 cup", "1 cup", "1 cup"],
-//     directions: ["step 1", "step 2", "step 3"],
-//   },
-// ];
 
 function SearchBarWithPills() {
   const [state, setState] = useState({
@@ -520,7 +489,7 @@ function SearchBarWithPills() {
                     query: ingred.suggestions,
                   }));
                   handleItemClick(ingred.suggestions);
-                  // setState((prevState) => ({ ...prevState, isHidden: false }));
+                  // setState((prevState) => ({ ...prevState, isHidden: false }));``
                   clearSearch();
                 }}
                 onMouseEnter={() => {
