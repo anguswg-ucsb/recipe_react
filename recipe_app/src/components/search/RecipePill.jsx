@@ -71,10 +71,10 @@ const RecipePill = ({
       <span
         key={index}
         // className={`text-white text-xs font-bold rounded-lg inline-block mt-4 ml-4 py-1.5 px-4 ${
-        className={`text-white text-xs font-bold rounded-lg inline-block p-2 m-2 ${
+        className={`text-black text-xs font-bold rounded-lg inline-block p-2 m-2 ${
           selected_ingredients.includes(ingredient)
             ? "bg-green-500"
-            : "bg-red-500 opacity-40"
+            : "bg-red-500/40"
         }`}
       >
         {ingredient}
@@ -108,10 +108,11 @@ const RecipePill = ({
     : "absolute top-0 right-0 bottom-0 left-0 bg-green-500 opacity-50 rounded-l";
 
   let expanded_styles = expanded
-    ? "text-xs border-box p-2 font-bold bg-slate-100"
+    ? "text-xs border-box p-2 font-bold bg-slate-100/0"
     : "text-xs border-box p-2 font-bold";
 
-  let pill_styles = "grid grid-cols-6 shadow-lg overflow-hidden";
+  let pill_styles =
+    "grid grid-cols-6 m-1 border border-slate-500/50 shadow-lg overflow-hidden rounded-md";
   // let pill_styles = "grid grid-cols-6 shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl";
 
   console.log("expanded: ", expanded);
@@ -119,30 +120,35 @@ const RecipePill = ({
 
   return (
     <>
-      <div onClick={toggleExpanded} class={pill_styles}>
-        <div class="col-start-1 col-span-5">
-          <div className="relative">
-            <div className="flex flex-row p-2 rounded-l overflow-hidden bg-slate-200/75">
-              <div className="text-center font-bold relative z-10">{dish}</div>
+      <div class="z-200 bg-slate-200/100 rounded-md p-1 border border-slate-/0">
+        {/* <div> */}
+        <div onClick={toggleExpanded} class={pill_styles}>
+          <div class="col-start-1 col-span-5">
+            <div className="relative">
+              <div className="flex flex-row p-2 rounded-l overflow-hidden bg-slate-200/75">
+                <div className="text-center font-bold relative z-10">
+                  {dish}
+                </div>
+              </div>
+              <div
+                className={progress_bar_style}
+                style={{ width: match_stats.pct_match_str }}
+              ></div>
             </div>
-            <div
-              className={progress_bar_style}
-              style={{ width: match_stats.pct_match_str }}
-            ></div>
+          </div>
+          <div class="col-start-6 col-span-1 flex items-center justify-center text-center rounded-r bg-slate-200/100 border-l border-slate-500/50 justify-items-center">
+            <div class={expanded_styles}>
+              {/* <div class="text-xs border-box p-2 font-bold"> */}
+              {match_stats.pct_match_str}
+            </div>
           </div>
         </div>
-        <div class="col-start-6 col-span-1 flex items-center justify-center text-center rounded-r bg-slate-200/100 border-l border-slate-400/50 justify-items-center">
-          <div class={expanded_styles}>
-            {/* <div class="text-xs border-box p-2 font-bold"> */}
-            {match_stats.pct_match_str}
+        {expanded && (
+          <div className="col-start-1 col-span-6 m-1 shadow-lg rounded-lg overflow-hidden bg-gray-100/100">
+            {renderTabContent()}
           </div>
-        </div>
+        )}
       </div>
-      {expanded && (
-        <div className="col-start-1 col-span-6 m-1 shadow-lg rounded-lg overflow-hidden">
-          {renderTabContent()}
-        </div>
-      )}
     </>
   );
 };

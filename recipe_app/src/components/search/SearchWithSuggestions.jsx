@@ -26,6 +26,11 @@ const SearchWithSuggestions = () => {
   //     ? ""
   //     : "hidden"
   // }`}
+  // <className = "relative z-0">
+    
+    
+  // className="fixed z-10 flex flex-wrap justify-center items-center inset-x-0 top-0 left-1/2 transform -translate-x-1/2 gap-1 bg-emerald-100 box-border border border-gray-300 p-2 rounded-md outline-none focus:border-blue-500 shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl"
+
   return (
     <div className="relative z-0">
       {/* Search Input */}

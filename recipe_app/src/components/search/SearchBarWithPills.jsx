@@ -45,7 +45,7 @@ import PillContainer from "./PillContainer";
 //   },
 // ];
 
-function SearchBarChip2() {
+function SearchBarWithPills() {
   const [state, setState] = useState({
     query: "",
     isHidden: true,
@@ -431,22 +431,28 @@ function SearchBarChip2() {
   // <className = "relative z-0">
 
   // className="fixed z-10 flex flex-wrap justify-center items-center inset-x-0 top-0 left-1/2 transform -translate-x-1/2 gap-1 bg-emerald-100 box-border border border-gray-300 p-2 rounded-md outline-none focus:border-blue-500 shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl"
+  // className="sticky z-10 w-1/2 flex flex-wrap mb-1.5 p-2 justify-between items-center gap-1 top-0 left-1/2 transform -translate-x-1/2 bg-emerald-100 box-border border border-gray-300 rounded-md outline-none focus:border-blue-500 shadow-lg transform transition duration-500 hover:shadow-2xl"
 
   return (
     <>
       <div class="relative z-0">
         {/* <div className="fixed z-10 flex justify-center"> */}
-        {/* <div className="relative flex justify-center"> */}
+        {/* <div className="flex justify-center"> */}
         <div
           // ref={inputRef}
           // tabIndex={0}
-          className="sticky z-10 w-1/2 flex flex-wrap mb-1.5 p-2 justify-between items-center gap-1 top-0 left-1/2 transform -translate-x-1/2 bg-emerald-100 box-border border border-gray-300 rounded-md outline-none focus:border-blue-500 shadow-lg transform transition duration-500 hover:shadow-2xl"
+          className="sticky z-10 w-1/2 flex flex-wrap mb-1.5 p-2 items-center justify-start gap-1 top-0 left-1/2 transform -translate-x-1/2 bg-emerald-100 box-border border border-gray-300 rounded-md outline-none focus:border-blue-500 shadow-lg transform transition duration-500 hover:shadow-2xl"
+          // className="sticky z-10 w-1/2 flex flex-wrap mb-1.5 p-2 justify-between items-center gap-1 top-0 left-1/2 transform -translate-x-1/2 bg-emerald-100 box-border border border-gray-300 rounded-md outline-none focus:border-blue-500 shadow-lg transform transition duration-500 hover:shadow-2xl"
+          // className="sticky z-10 w-full lg:w-1/2 mx-auto mb-1.5 p-1 flex flex-wrap items-center justify-between gap-1 top-0 bg-emerald-100 box-border border border-gray-300 rounded-md outline-none focus:border-blue-500 shadow-lg transition duration-500 hover:shadow-2xl"
+          // className="sticky z-10 flex flex-wrap mb-1.5 p-1 justify-between items-center gap-1 top-0 left-1/2 transform -translate-x-1/2 bg-emerald-100 box-border border border-gray-300 rounded-md outline-none focus:border-blue-500 shadow-lg transform transition duration-500 hover:shadow-2xl"
 
           //   className="fixed z-10 flex flex-wrap justify-between items-center inset-x-0 top-0 left-1/2 transform -translate-x-1/2 gap-1 bg-emerald-100 box-border border border-gray-300 p-2 rounded-md outline-none focus:border-blue-500 shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl"
 
           // className="relative flex flex-wrap items-center justify-center gap-1 w-80 bg-emerald-100 box-border border border-gray-300 p-2 rounded-md outline-none focus:border-blue-500 shadow-lg transform transition duration-500 hover:scale-105 hover:shadow-2xl"
         >
+          {/* <div className="flex flex-wrap items-start justify-start"> */}
           {state.selectedItems.map((item, index) => (
+            // <div class="w-full">
             <IngredientBadge
               key={`${item}_${index}`}
               item={item}
@@ -454,7 +460,9 @@ function SearchBarChip2() {
               onClick={(event) => event.stopPropagation()}
               clearSearch={clearSearch}
             />
+            //  </div>
           ))}
+          {/* </div> */}
           <input
             ref={inputRef}
             onFocus={() =>
@@ -467,7 +475,9 @@ function SearchBarChip2() {
             }}
             type="text"
             // className={styles.textbox}
-            className="z-10 flex-grow border border-solid border-gray-300 h-10 px-2 rounded-md outline-none transition duration-200 focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40 box-border"
+            // className="z-10 flex-grow border border-solid border-gray-300 h-10 px-2 rounded-md outline-none transition duration-200 focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40 box-border max-w-[calc(100% - 8px)]"
+            // className="z-10 flex-grow border border-solid border-gray-300 h-10 px-2 rounded-md outline-none transition duration-200 focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40 box-border"
+            className="z-10 w-full flex-grow border border-solid border-gray-300 max-h-full h-10 px-2 rounded-md outline-none transition duration-200 focus:border-purple-400 focus:ring-purple-300 focus:outline-none focus:ring focus:ring-opacity-40 box-border"
             //   className="z-10 flex-grow p-2 border border-gray-300 rounded-md outline-none focus:border-blue-500"
             value={state.query}
             onChange={(e) =>
@@ -526,8 +536,8 @@ function SearchBarChip2() {
           </ul>
         </div>
         {/* </div> */}
-        <div className="z-100 flex justify-between">
-          {/* <div className="z-100 flex justify-center"> */}
+        {/* <div className="z-100 flex justify-between"> */}
+        <div className="z-100 flex justify-center">
           {/* <div className="z-100 mt-20 grid grid-cols-3 gap-4 left-1/2 transform -translate-x-1/2"> */}
           <PillContainer
             result={state.result}
@@ -540,4 +550,4 @@ function SearchBarChip2() {
   );
 }
 
-export default SearchBarChip2;
+export default SearchBarWithPills;

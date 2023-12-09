@@ -79,7 +79,7 @@ function PillContainer({ result, selected_items, isOpen }) {
       <Transition
         appear={true}
         show={isOpen}
-        class="p-5 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-5"
+        class="p-5 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-5"
         // class="p-10 grid grid-cols-1 sm:grid-cols-1 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-5"
         // class="flex flex-wrap"
       >

@@ -7,6 +7,7 @@ import SearchBarWithChips from "./components/search/SearchBarWithChips";
 import ComboBoxSearch from "./components/search/ComboBoxSearch";
 import SearchWithSuggestions from "./components/search/SearchWithSuggestions";
 import SearchBarWithPills from "./components/search/SearchBarWithPills";
+import SearchBarContainer from "./components/search/SearchBarContainer";
 // import NavBar from "./components/navbar/NavBar";
 
 // import "bulma/css/bulma.min.css"; // Import Bulma styles
@@ -22,7 +23,8 @@ function App() {
       {/* <ComboBoxSearch /> */}
       {/* <SearchBarWithChips /> */}
       {/* <SearchWithSuggestions /> */}
-      <SearchBarWithPills />
+      {/* <SearchBarWithPills /> */}
+      <SearchBarContainer />
     </>
   );
 }
