@@ -611,6 +611,9 @@ video {
 .mb-4 {
   margin-bottom: 1rem;
 }
+.ml-2 {
+  margin-left: 0.5rem;
+}
 .ml-4 {
   margin-left: 1rem;
 }
@@ -661,6 +664,9 @@ video {
 }
 .max-h-40 {
   max-height: 10rem;
+}
+.max-h-64 {
+  max-height: 16rem;
 }
 .max-h-\[1000px\] {
   max-height: 1000px;
@@ -915,6 +921,12 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(191 219 254 / var(--tw-bg-opacity));
 }
+.bg-blue-200\/100 {
+  background-color: rgb(191 219 254 / 1);
+}
+.bg-blue-300\/25 {
+  background-color: rgb(147 197 253 / 0.25);
+}
 .bg-blue-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(59 130 246 / var(--tw-bg-opacity));
@@ -941,6 +953,9 @@ video {
 .bg-gray-200 {
   --tw-bg-opacity: 1;
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+}
+.bg-gray-200\/100 {
+  background-color: rgb(229 231 235 / 1);
 }
 .bg-gray-50 {
   --tw-bg-opacity: 1;
@@ -985,9 +1000,15 @@ video {
 .bg-slate-200\/75 {
   background-color: rgb(226 232 240 / 0.75);
 }
+.bg-slate-400\/50 {
+  background-color: rgb(148 163 184 / 0.5);
+}
 .bg-slate-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(248 250 252 / var(--tw-bg-opacity));
+}
+.bg-slate-500\/50 {
+  background-color: rgb(100 116 139 / 0.5);
 }
 .bg-white {
   --tw-bg-opacity: 1;
@@ -1204,6 +1225,12 @@ video {
 .ease-linear {
   transition-timing-function: linear;
 }
+.\[-ms-overflow-style\:\'none\'\] {
+  -ms-overflow-style: 'none';
+}
+.\[scrollbar-width\:\'none\'\] {
+  scrollbar-width: 'none';
+}
 /* src/styles.css */
 /* @import "tailwindcss/base";
 @import "tailwindcss/components";
@@ -1349,4 +1376,7 @@ video {
   .xl\:grid-cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
+}
+.\[\&\:\:-webkit-scrollbar\]\:hidden::-webkit-scrollbar {
+  display: none;
 }

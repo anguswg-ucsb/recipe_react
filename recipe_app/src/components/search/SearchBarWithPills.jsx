@@ -484,6 +484,7 @@ function SearchBarWithPills() {
                 //   isOptionSelected(option) ? styles.selected : ""
                 // } ${index === highlightedIndex ? styles.highlighted : ""}`}
                 onClick={() => {
+                  // event.stopPropagation(); // Stop propagation here
                   setState((prevState) => ({
                     ...prevState,
                     query: ingred.suggestions,

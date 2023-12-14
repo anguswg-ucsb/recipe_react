@@ -89,6 +89,8 @@ function PillContainer({ result, selected_items, isOpen }) {
               key={recipe.dish_id}
               dish={recipe.dish}
               ingredients={recipe.ingredients}
+              directions={recipe.directions}
+              url={recipe.url}
               selected_ingredients={selected_items}
               match_stats={recipe.match_stats}
             />
